@@ -34,6 +34,7 @@ def generate_url(partial_uri_list):
             url += partial_uri
         else:
             url += partial_uri + "/"
+    return url
 
 
 def retrieve_token(auth_url, username, password):
