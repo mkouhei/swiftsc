@@ -45,5 +45,5 @@ def test_pep8():
     errors = report.get_count('E')
     warnings = report.get_count('W')
     message = 'pep8: %d errors / %d warnings' % (errors, warnings)
-    print message
+    print(message)
     assert report.total_errors == 0, message
