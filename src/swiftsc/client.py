@@ -18,6 +18,15 @@
 import requests
 
 
+def generate_url(partial_uri_list):
+    url = ""
+    for i, partial_uri in enumerate(partial_uri_list):
+        if i + 1 == len(partial_uri_list):
+            url += partial_uri
+        else:
+            url += partial_uri + "/"
+
+
 def retrieve_token(auth_url, username, password):
     """
 
@@ -29,8 +38,7 @@ def retrieve_token(auth_url, username, password):
         username: Swift User name
         password: Swift User password
     """
-    headers = {'X-Storage-User': username,
-               'X-Storage-Pass': password}
+    headers = {'X-Storage-User': username, 'X-Storage-Pass': password}
     r = requests.get(auth_url, headers=headers)
     return r.headers.get('X-Auth-Token'), r.headers.get('X-Storage-Url')
 
@@ -64,7 +72,8 @@ def create_container(token, storage_url, container_name):
     Return: 201 (Created)
     """
     headers = {'X-Auth-Token': token}
-    r = requests.put(storage_url + '/' + container_name, headers=headers)
+    url = generate_url([storage_url, container_name])
+    r = requests.put(url, headers=headers)
     return r.status_code
 
 
@@ -79,8 +88,8 @@ def delete_container(token, storage_url, container_name):
     Return: 204 (No Content)
     """
     headers = {'X-Auth-Token': token}
-
-    r = requests.delete(storage_url + '/' + container_name, headers=headers)
+    url = generate_url([storage_url, container_name])
+    r = requests.delete(url, headers=headers)
     return r.status_code
 
 
@@ -100,8 +109,8 @@ def create_object(token, storage_url, container_name,
     headers = {'X-Auth-Token': token}
 
     files = {'file': open(local_filepath, 'rb')}
-    r = requests.put(storage_url + '/' + container_name + '/' + object_name,
-                     headers=headers, files=files)
+    url = generate_url([storage_url, container_name, object_name])
+    r = requests.put(url, headers=headers, files=files)
     return r.status_code
 
 
@@ -115,8 +124,8 @@ def list_objects(token, storage_url, container_name):
     """
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
-    r = requests.get(storage_url + '/' + container_name + '/',
-                     headers=headers, params=payload)
+    url = generate_url([storage_url, container_name]) + '/'
+    r = requests.get(url, headers=headers, params=payload)
     return r.json
 
 
@@ -132,8 +141,8 @@ def retrieve_object(token, storage_url, container_name, object_name):
     Return:
     """
     headers = {'X-Auth-Token': token}
-    r = requests.get(storage_url + '/' + container_name + '/' + object_name,
-                     headers=headers)
+    url = generate_url([storage_url, container_name, object_name])
+    r = requests.get(url,  headers=headers)
     return r
 
 
@@ -150,13 +159,13 @@ def copy_object(token, storage_url, container_name,
 
     Return: 201 (Created)
     """
+    src_url = '/' + generate_url([container_name, src_object_name])
     headers = {'X-Auth-Token': token,
                'Content-Length': "0",
-               'X-Copy-From': '/%s/%s' % (container_name, src_object_name)}
+               'X-Copy-From': src_url}
 
-    r = requests.put('%s/%s/%s' % (storage_url, container_name,
-                                   dest_object_name),
-                     headers=headers)
+    dest_url = generate_url([storage_url, container_name, dest_object_name])
+    r = requests.put(dest_url, headers=headers)
     return r.status_code
 
 
@@ -172,7 +181,6 @@ def delete_object(token, storage_url, container_name, object_name):
     Return: 204 (No Content)
     """
     headers = {'X-Auth-Token': token}
-    r = requests.delete('%s/%s/%s' % (storage_url, container_name,
-                                      object_name),
-                        headers=headers)
+    url = generate_url([storage_url, container_name, object_name])
+    r = requests.delete(url, headers=headers)
     return r.status_code
