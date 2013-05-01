@@ -150,11 +150,9 @@ def copy_object(token, storage_url, container_name,
 
     Return: 201 (Created)
     """
-    import urllib
     headers = {'X-Auth-Token': token,
                'Content-Length': "0",
-               'X-Copy-From': '/%s/%s' % (urllib.quote(container_name),
-                                          src_object_name)}
+               'X-Copy-From': '/%s/%s' % (container_name, src_object_name)}
 
     r = requests.put('%s/%s/%s' % (storage_url, container_name,
                                    dest_object_name),
