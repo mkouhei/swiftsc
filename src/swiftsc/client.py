@@ -18,18 +18,20 @@
 import requests
 
 
-def retrieve_token(url, username, password):
+def retrieve_token(auth_url, username, password):
     """
 
     Arguments:
 
-        url: Swift API base URL
+        url: Swift API of authentication
+             https://<Host>/auth/<api_version>
+             ex. https://swift.example.org/auth/v1.0
         username: Swift User name
         password: Swift User password
     """
     headers = {'X-Storage-User': username,
                'X-Storage-Pass': password}
-    r = requests.get(url + '/auth/v1.0', headers=headers)
+    r = requests.get(auth_url, headers=headers)
     return r.headers.get('X-Auth-Token'), r.headers.get('X-Storage-Url')
 
 
