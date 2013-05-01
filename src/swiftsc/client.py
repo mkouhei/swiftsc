@@ -31,7 +31,7 @@ def retrieve_token(url, username, password):
                'X-Storage-Pass': password}
     r = requests.get(url + '/auth/v1.0', headers=headers)
     return r.headers.get('X-Auth-Token'), r.headers.get('X-Storage-Url')
-    
+
 
 def list_containers(token, storage_url):
     """
@@ -45,7 +45,8 @@ def list_containers(token, storage_url):
     payload = {'format': 'json'}
     r = requests.get(storage_url, headers=headers, params=payload)
     # not use r.content that is data type is "str".
-    # You must encode to unicode and utf-8 by yourself if you use multibyte character
+    # You must encode to unicode and utf-8 by yourself
+    # if you use multibyte character.
     return r.json
 
 
@@ -81,7 +82,8 @@ def delete_container(token, storage_url, container_name):
     return r.status_code
 
 
-def create_object(token, storage_url, container_name, local_filepath, object_name):
+def create_object(token, storage_url, container_name,
+                  local_filepath, object_name):
     """
     Arguments:
 
@@ -97,7 +99,7 @@ def create_object(token, storage_url, container_name, local_filepath, object_nam
 
     files = {'file': open(local_filepath, 'rb')}
     r = requests.put(storage_url + '/' + container_name + '/' + object_name,
-                      headers=headers, files=files)
+                     headers=headers, files=files)
     return r.status_code
 
 
@@ -133,7 +135,8 @@ def retrieve_object(token, storage_url, container_name, object_name):
     return r
 
 
-def copy_object(token, storage_url, container_name, src_object_name, dest_object_name):
+def copy_object(token, storage_url, container_name,
+                src_object_name, dest_object_name):
     """
     Arguments:
 
@@ -148,9 +151,11 @@ def copy_object(token, storage_url, container_name, src_object_name, dest_object
     import urllib
     headers = {'X-Auth-Token': token,
                'Content-Length': "0",
-               'X-Copy-From': '/%s/%s' % (urllib.quote(container_name), src_object_name)}
+               'X-Copy-From': '/%s/%s' % (urllib.quote(container_name),
+                                          src_object_name)}
 
-    r = requests.put(storage_url + '/' + container_name + '/' + dest_object_name,
+    r = requests.put('%s/%s/%s' % (storage_url, container_name,
+                                   dest_object_name),
                      headers=headers)
     return r.status_code
 
@@ -167,6 +172,7 @@ def delete_object(token, storage_url, container_name, object_name):
     Return: 204 (No Content)
     """
     headers = {'X-Auth-Token': token}
-    r = requests.delete(storage_url + '/' + container_name + '/' + object_name,
-                      headers=headers)
+    r = requests.delete('%s/%s/%s' % (storage_url, container_name,
+                                      object_name),
+                        headers=headers)
     return r.status_code
