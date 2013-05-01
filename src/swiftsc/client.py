@@ -19,6 +19,15 @@ import requests
 
 
 def generate_url(partial_uri_list):
+    """
+    Argument:
+
+        partial_uri_list: patial string of generating URL
+                          ex. ["https://swift.example.org", "auth", "v1.0"]
+
+    Return: URL
+            ex. "https://swift.example.org/auth/v1.0"
+    """
     url = ""
     for i, partial_uri in enumerate(partial_uri_list):
         if i + 1 == len(partial_uri_list):
