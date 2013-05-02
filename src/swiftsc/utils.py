@@ -44,7 +44,14 @@ def check_mimetype(filepath):
 
         filename: target filename path
     """
-    m = magic.open(magic.MAGIC_MIME)
-    m.load()
-    mimetype = m.file(filepath).split('; ')[0]
+    if 'open' in dir(magic):
+        # for python-magic package of Debian Wheezy/Sid, Ubuntu 12.04
+        m = magic.open(magic.MAGIC_MIME)
+        m.load()
+        mimetype = m.file(filepath).split('; ')[0]
+    elif 'from_file' in dir(magic):
+        # for pip install python-magic
+        mimetype = magic.from_file(filepath, mime=True)
+    else:
+        raise RuntimeError("Not support python-magic in this environment")
     return mimetype
