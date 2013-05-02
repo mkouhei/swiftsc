@@ -3,7 +3,8 @@ swiftsc is simple client library of OpenStack Swift
 ===================================================
 
 This tool is simple client library of OpenStack Swift.
-I developped this tool as core module for backup tool.
+This tool is intended to be used in the module and Python script other.
+The main purpose of this tool is used as a core module for backup tool.
 
 
 Requirements
