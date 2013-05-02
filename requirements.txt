@@ -1,2 +1,3 @@
 pep8==1.4
-requires
+mock
+requests

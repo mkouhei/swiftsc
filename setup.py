@@ -25,11 +25,13 @@ import swiftsc
 
 classifiers = [
     "Development Status :: 3 - Alpha",
-    "Intended Audience :: System Administrators",
+    "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python",
     "Topic :: Internet",
-    "Topic :: System :: Systems Administration",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Environment :: OpenStack",
 ]
 
 long_description = \
@@ -37,7 +39,7 @@ long_description = \
         open(os.path.join("docs","TODO.rst")).read() + \
         open(os.path.join("docs","HISTORY.rst")).read()
 
-requires = ['setuptools']
+requires = ['setuptools', 'requests']
 
 setup(name='swiftsc',
       version='0.1',
@@ -56,8 +58,9 @@ setup(name='swiftsc',
             'pytest',
             'pep8',
             'unittest',
+            'mock',
             ],
         ),
       test_suite='tests',
-      tests_require=['pytest','pep8','unittest'],
+      tests_require=['pytest','pep8','unittest', 'mock'],
 )
