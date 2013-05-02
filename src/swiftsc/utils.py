@@ -15,6 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+import magic
 
 
 def generate_url(partial_uri_list):
@@ -34,3 +35,16 @@ def generate_url(partial_uri_list):
         else:
             url += partial_uri + "/"
     return url
+
+
+def check_mimetype(filepath):
+    """check mimetype of file
+
+    Argument:
+
+        filename: target filename path
+    """
+    m = magic.open(magic.MAGIC_MIME)
+    m.load()
+    mimetype = m.file(filepath).split('; ')[0]
+    return mimetype

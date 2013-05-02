@@ -29,3 +29,7 @@ class UtilsTests(unittest.TestCase):
         self.assertEqual(u.generate_url(v.partial_uri_list_2), v.auth_url)
         self.assertEqual(u.generate_url(v.partial_uri_list_3),
                          v.auth_ver_url)
+
+    def test_check_mimetype(self):
+        self.assertEqual(v.test_file_mimetype,
+                         u.check_mimetype(v.test_file))

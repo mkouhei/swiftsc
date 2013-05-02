@@ -78,7 +78,7 @@ class ClientTests(unittest.TestCase):
         res = requests.Response()
         res.status_code = 201
         mock_.return_value = res
-        test_file = os.path.abspath('src/swiftsc_tests/sample.txt')
+        test_file = v.test_file
         self.assertEqual(201,
                          c.create_object(v.token, v.storage_url, v.cntr_name,
                                          test_file, v.object_name))
@@ -91,17 +91,17 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(v.objects,
                          c.list_objects(v.token, v.storage_url, v.cntr_name))
 
-    """
     @patch('requests.get')
     def test_retrieve_object(self, mock_):
         res = requests.Response()
-        test_file = os.path.abspath('src/swiftsc_tests/sample.txt')
-        res._content = open(test_file, 'rb')
+        with open(v.test_file, 'rb') as f:
+            res._content = f.read()
+            f.seek(0)
+            file_content = f.read()
         mock_.return_value = res
-        self.assertEqual(200,
+        self.assertEqual(file_content,
                          c.retrieve_object(v.token, v.storage_url, v.cntr_name,
                                            v.object_name))
-                                           """
 
     @patch('requests.put')
     def test_copy_object(self, mock_):

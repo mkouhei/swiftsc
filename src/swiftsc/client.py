@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import requests
+import os.path
 import utils
 
 
@@ -103,7 +104,7 @@ def delete_container(token, storage_url, container_name):
 
 
 def create_object(token, storage_url, container_name,
-                  local_filepath, object_name):
+                  local_filepath, object_name=None):
     """
     Arguments:
 
@@ -111,15 +112,19 @@ def create_object(token, storage_url, container_name,
         storage_url: URL of swift storage
         container_name: container name
         local_filepath: absolute path of upload file
-        object_name: object name
+        object_name: object name (optional)
 
     Return: 201 (Created)
     """
-    headers = {'X-Auth-Token': token}
+    if object_name is None:
+        object_name = os.path.basename(local_filepath)
+    mimetype = utils.check_mimetype(local_filepath)
+    headers = {'X-Auth-Token': token, 'content-type': mimetype}
 
-    files = {'file': open(local_filepath, 'rb')}
+    with open(local_filepath, 'rb') as f:
+        data = f.read()
     url = utils.generate_url([storage_url, container_name, object_name])
-    r = requests.put(url, headers=headers, files=files)
+    r = requests.put(url, headers=headers, data=data)
     return r.status_code
 
 
@@ -147,12 +152,12 @@ def retrieve_object(token, storage_url, container_name, object_name):
         container_name: container name
         object_name: object name
 
-    Return:
+    Return: object data
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
     r = requests.get(url,  headers=headers)
-    return r
+    return r.content
 
 
 def copy_object(token, storage_url, container_name,
