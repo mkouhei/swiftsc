@@ -1,0 +1,17 @@
+Source: swiftsc
+Section: python
+Priority: optional
+Maintainer: Kouhei Maeda <mkouhei@palmtb.net>
+Build-Depends: debhelper (>= 8.0.0), python-all, python-setuptools, python-pytest, pep8, python-mock, python-requests, python-magic
+Standards-Version: 3.9.3
+X-Python-Version: 2.7
+Homepage: https://github.com/mkouhei/swiftsc
+
+Package: python-swiftsc
+Architecture: all
+Provides: ${python:Provides}
+Depends: ${python:Depends}, ${misc:Depends}, python-requests, python-magic
+Description: simple client library of OpenStack Swift
+ This tool is simple client library of OpenStack Swift.
+ This tool is intended to be used in the module and Python script other.
+ The main purpose of this tool is used as a core module for backup tool.
