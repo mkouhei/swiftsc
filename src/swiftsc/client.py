@@ -16,25 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import requests
-
-
-def generate_url(partial_uri_list):
-    """
-    Argument:
-
-        partial_uri_list: patial string of generating URL
-                          ex. ["https://swift.example.org", "auth", "v1.0"]
-
-    Return: URL
-            ex. "https://swift.example.org/auth/v1.0"
-    """
-    url = ""
-    for i, partial_uri in enumerate(partial_uri_list):
-        if i + 1 == len(partial_uri_list):
-            url += partial_uri
-        else:
-            url += partial_uri + "/"
-    return url
+import utils
 
 
 def retrieve_token(auth_url, username, password):
@@ -82,7 +64,7 @@ def create_container(token, storage_url, container_name):
     Return: 201 (Created)
     """
     headers = {'X-Auth-Token': token}
-    url = generate_url([storage_url, container_name])
+    url = utils.generate_url([storage_url, container_name])
     r = requests.put(url, headers=headers)
     return r.status_code
 
@@ -98,7 +80,7 @@ def delete_container(token, storage_url, container_name):
     Return: 204 (No Content)
     """
     headers = {'X-Auth-Token': token}
-    url = generate_url([storage_url, container_name])
+    url = utils.generate_url([storage_url, container_name])
     r = requests.delete(url, headers=headers)
     return r.status_code
 
@@ -119,7 +101,7 @@ def create_object(token, storage_url, container_name,
     headers = {'X-Auth-Token': token}
 
     files = {'file': open(local_filepath, 'rb')}
-    url = generate_url([storage_url, container_name, object_name])
+    url = utils.generate_url([storage_url, container_name, object_name])
     r = requests.put(url, headers=headers, files=files)
     return r.status_code
 
@@ -134,7 +116,7 @@ def list_objects(token, storage_url, container_name):
     """
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
-    url = generate_url([storage_url, container_name]) + '/'
+    url = utils.generate_url([storage_url, container_name]) + '/'
     r = requests.get(url, headers=headers, params=payload)
     return r.json
 
@@ -151,7 +133,7 @@ def retrieve_object(token, storage_url, container_name, object_name):
     Return:
     """
     headers = {'X-Auth-Token': token}
-    url = generate_url([storage_url, container_name, object_name])
+    url = utils.generate_url([storage_url, container_name, object_name])
     r = requests.get(url,  headers=headers)
     return r
 
@@ -169,12 +151,13 @@ def copy_object(token, storage_url, container_name,
 
     Return: 201 (Created)
     """
-    src_url = '/' + generate_url([container_name, src_object_name])
+    src_url = '/' + utils.generate_url([container_name, src_object_name])
     headers = {'X-Auth-Token': token,
                'Content-Length': "0",
                'X-Copy-From': src_url}
 
-    dest_url = generate_url([storage_url, container_name, dest_object_name])
+    dest_url = utils.generate_url([storage_url, container_name,
+                                   dest_object_name])
     r = requests.put(dest_url, headers=headers)
     return r.status_code
 
@@ -191,6 +174,6 @@ def delete_object(token, storage_url, container_name, object_name):
     Return: 204 (No Content)
     """
     headers = {'X-Auth-Token': token}
-    url = generate_url([storage_url, container_name, object_name])
+    url = utils.generate_url([storage_url, container_name, object_name])
     r = requests.delete(url, headers=headers)
     return r.status_code

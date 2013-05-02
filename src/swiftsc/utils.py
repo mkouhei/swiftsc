@@ -15,15 +15,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-import unittest
-import sys
-import os.path
-sys.path.append(os.path.abspath('src'))
-import swiftsc.client as c
-import test_vars as v
 
 
-class ClientTests(unittest.TestCase):
+def generate_url(partial_uri_list):
+    """
+    Argument:
 
-    def setUp(self):
-        pass
+        partial_uri_list: patial string of generating URL
+                          ex. ["https://swift.example.org", "auth", "v1.0"]
+
+    Return: URL
+            ex. "https://swift.example.org/auth/v1.0"
+    """
+    url = ""
+    for i, partial_uri in enumerate(partial_uri_list):
+        if i + 1 == len(partial_uri_list):
+            url += partial_uri
+        else:
+            url += partial_uri + "/"
+    return url

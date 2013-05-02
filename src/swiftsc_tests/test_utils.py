@@ -19,11 +19,12 @@ import unittest
 import sys
 import os.path
 sys.path.append(os.path.abspath('src'))
-import swiftsc.client as c
+import swiftsc.utils as u
 import test_vars as v
 
 
-class ClientTests(unittest.TestCase):
+class UtilsTests(unittest.TestCase):
 
-    def setUp(self):
-        pass
+    def test_generate_uri(self):
+        self.assertEqual(u.generate_url(v.partial_uri_list_2), v.url_2)
+        self.assertEqual(u.generate_url(v.partial_uri_list_3), v.url_3)
