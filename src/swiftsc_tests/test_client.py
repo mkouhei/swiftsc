@@ -16,6 +16,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import unittest
+import mock
+from mock import patch
+import requests
 import sys
 import os.path
 sys.path.append(os.path.abspath('src'))
@@ -25,5 +28,95 @@ import test_vars as v
 
 class ClientTests(unittest.TestCase):
 
-    def setUp(self):
-        pass
+    @patch('requests.get')
+    def test_retrieve_token(self, mock_):
+        res = requests.Response()
+        res.headers = {'X-Auth-Token': v.token,
+                       'X-Storage-Url': v.storage_url}
+        mock_.return_value = res
+        self.assertTupleEqual((v.token, v.storage_url),
+                              c.retrieve_token(v.auth_ver_url,
+                                               v.username, v.password))
+
+    @patch('requests.get')
+    def test_list_containers(self, mock_):
+        res = requests.Response()
+        res._content = v.containers_json
+        mock_.return_value = res
+        self.assertListEqual(v.containers,
+                             c.list_containers(v.token, v.storage_url))
+
+    @patch('requests.put')
+    def test_create_container(self, mock_):
+        res = requests.Response()
+        res.status_code = 201
+        mock_.return_value = res
+        self.assertEqual(201,
+                         c.create_container(v.token, v.storage_url,
+                                            v.cntr_name))
+
+    @patch('requests.get')
+    def test_is_container(self, mock_):
+        res = requests.Response()
+        res.status_code = 200
+        mock_.return_value = res
+        self.assertEqual(200,
+                         c.is_container(v.token, v.storage_url,
+                                        v.cntr_name))
+
+    @patch('requests.delete')
+    def test_delete_container(self, mock_):
+        res = requests.Response()
+        res.status_code = 204
+        mock_.return_value = res
+        self.assertEqual(204,
+                         c.delete_container(v.token, v.storage_url,
+                                            v.cntr_name))
+
+    @patch('requests.put')
+    def test_create_object(self, mock_):
+        res = requests.Response()
+        res.status_code = 201
+        mock_.return_value = res
+        test_file = os.path.abspath('src/swiftsc_tests/sample.txt')
+        self.assertEqual(201,
+                         c.create_object(v.token, v.storage_url, v.cntr_name,
+                                         test_file, v.object_name))
+
+    @patch('requests.get')
+    def test_list_objects(self, mock_):
+        res = requests.Response()
+        res._content = v.objects_json
+        mock_.return_value = res
+        self.assertEqual(v.objects,
+                         c.list_objects(v.token, v.storage_url, v.cntr_name))
+
+    """
+    @patch('requests.get')
+    def test_retrieve_object(self, mock_):
+        res = requests.Response()
+        test_file = os.path.abspath('src/swiftsc_tests/sample.txt')
+        res._content = open(test_file, 'rb')
+        mock_.return_value = res
+        self.assertEqual(200,
+                         c.retrieve_object(v.token, v.storage_url, v.cntr_name,
+                                           v.object_name))
+                                           """
+
+    @patch('requests.put')
+    def test_copy_object(self, mock_):
+        res = requests.Response()
+        res.status_code = 201
+        mock_.return_value = res
+        self.assertEqual(201,
+                         c.copy_object(v.token, v.storage_url, v.cntr_name,
+                                       v.object_name, v.dest_obj_name))
+
+    @patch('requests.delete')
+    def test_delete_object(self, mock_):
+        res = requests.Response()
+        res.status_code = 204
+        mock_.return_value = res
+        self.assertEqual(204,
+                         c.delete_object(v.token, v.storage_url, v.cntr_name,
+                                         v.object_name))

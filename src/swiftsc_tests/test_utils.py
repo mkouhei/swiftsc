@@ -26,5 +26,6 @@ import test_vars as v
 class UtilsTests(unittest.TestCase):
 
     def test_generate_uri(self):
-        self.assertEqual(u.generate_url(v.partial_uri_list_2), v.url_2)
-        self.assertEqual(u.generate_url(v.partial_uri_list_3), v.url_3)
+        self.assertEqual(u.generate_url(v.partial_uri_list_2), v.auth_url)
+        self.assertEqual(u.generate_url(v.partial_uri_list_3),
+                         v.auth_ver_url)
