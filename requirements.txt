@@ -1,2 +1,4 @@
 pep8==1.4
-requires
+mock==0.8.0
+requests==0.12.1
+python-magic

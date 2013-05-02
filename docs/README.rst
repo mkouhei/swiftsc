@@ -3,14 +3,16 @@ swiftsc is simple client library of OpenStack Swift
 ===================================================
 
 This tool is simple client library of OpenStack Swift.
-I developped this tool as core module for backup tool.
+This tool is intended to be used in the module and Python script other.
+The main purpose of this tool is used as a core module for backup tool.
 
 
 Requirements
 ------------
 
 * Python 2.7 or Python 3.2
-* requires 0.12.1 over
+* requires 0.12.1
+* python-magic 5.x of debian package or python-magic 0.4.x of PyPI
 
 
 Setup
@@ -31,7 +33,7 @@ Firstly copy pre-commit hook script.::
 
 Next install python2.7 later, and python-requests, py.test. Below in Debian GNU/Linux Sid system,::
 
-   $ sudo apt-get install python python-requests python-pytest pep8 python3 python3-requuests python3-pytest
+   $ sudo apt-get install python python-requests python-pytest pep8 python-magic python3 python3-requests python3-pytest
 
 Then checkout 'devel' branch for development, commit your changes. Before pull request, execute git rebase.
 

@@ -1,6 +1,5 @@
 ToDo
 ----
 
-* test
-* documents
+* create documents
 

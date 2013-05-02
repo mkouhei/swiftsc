@@ -1,0 +1,7 @@
+language: python
+python:
+  - "2.7"
+before_install:
+  - sudo apt-get install python-mock python-py pep8 python-requests python-magic
+script:
+  - bash utils/pre-commit.txt

@@ -16,22 +16,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import requests
+import os.path
+import utils
 
 
-def retrieve_token(url, username, password):
+def retrieve_token(auth_url, username, password):
     """
 
     Arguments:
 
-        url: Swift API base URL
+        url: Swift API of authentication
+             https://<Host>/auth/<api_version>
+             ex. https://swift.example.org/auth/v1.0
         username: Swift User name
         password: Swift User password
     """
-    headers = {'X-Storage-User': username,
-               'X-Storage-Pass': password}
-    r = requests.get(url + '/auth/v1.0', headers=headers)
+    headers = {'X-Storage-User': username, 'X-Storage-Pass': password}
+    r = requests.get(auth_url, headers=headers)
     return r.headers.get('X-Auth-Token'), r.headers.get('X-Storage-Url')
-    
+
 
 def list_containers(token, storage_url):
     """
@@ -45,7 +48,9 @@ def list_containers(token, storage_url):
     payload = {'format': 'json'}
     r = requests.get(storage_url, headers=headers, params=payload)
     # not use r.content that is data type is "str".
-    # You must encode to unicode and utf-8 by yourself if you use multibyte character
+    # You must encode to unicode and utf-8 by yourself
+    # if you use multibyte character.
+    r.encoding = 'utf-8'
     return r.json
 
 
@@ -61,7 +66,25 @@ def create_container(token, storage_url, container_name):
     Return: 201 (Created)
     """
     headers = {'X-Auth-Token': token}
-    r = requests.put(storage_url + '/' + container_name, headers=headers)
+    url = utils.generate_url([storage_url, container_name])
+    r = requests.put(url, headers=headers)
+    return r.status_code
+
+
+def is_container(token, storage_url, container_name):
+    """
+
+    Arguments:
+
+        token: authentication token
+        storage_url: URL of swift storage
+        container_name: container name
+
+    Return: 200
+    """
+    headers = {'X-Auth-Token': token}
+    url = utils.generate_url([storage_url, container_name])
+    r = requests.get(url, headers=headers)
     return r.status_code
 
 
@@ -76,12 +99,13 @@ def delete_container(token, storage_url, container_name):
     Return: 204 (No Content)
     """
     headers = {'X-Auth-Token': token}
-
-    r = requests.delete(storage_url + '/' + container_name, headers=headers)
+    url = utils.generate_url([storage_url, container_name])
+    r = requests.delete(url, headers=headers)
     return r.status_code
 
 
-def create_object(token, storage_url, container_name, local_filepath, object_name):
+def create_object(token, storage_url, container_name,
+                  local_filepath, object_name=None):
     """
     Arguments:
 
@@ -89,15 +113,19 @@ def create_object(token, storage_url, container_name, local_filepath, object_nam
         storage_url: URL of swift storage
         container_name: container name
         local_filepath: absolute path of upload file
-        object_name: object name
+        object_name: object name (optional)
 
     Return: 201 (Created)
     """
-    headers = {'X-Auth-Token': token}
+    if object_name is None:
+        object_name = os.path.basename(local_filepath)
+    mimetype = utils.check_mimetype(local_filepath)
+    headers = {'X-Auth-Token': token, 'content-type': mimetype}
 
-    files = {'file': open(local_filepath, 'rb')}
-    r = requests.put(storage_url + '/' + container_name + '/' + object_name,
-                      headers=headers, files=files)
+    with open(local_filepath, 'rb') as f:
+        data = f.read()
+    url = utils.generate_url([storage_url, container_name, object_name])
+    r = requests.put(url, headers=headers, data=data)
     return r.status_code
 
 
@@ -111,8 +139,9 @@ def list_objects(token, storage_url, container_name):
     """
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
-    r = requests.get(storage_url + '/' + container_name + '/',
-                     headers=headers, params=payload)
+    url = utils.generate_url([storage_url, container_name]) + '/'
+    r = requests.get(url, headers=headers, params=payload)
+    r.encoding = 'utf-8'
     return r.json
 
 
@@ -125,15 +154,16 @@ def retrieve_object(token, storage_url, container_name, object_name):
         container_name: container name
         object_name: object name
 
-    Return:
+    Return: object data
     """
     headers = {'X-Auth-Token': token}
-    r = requests.get(storage_url + '/' + container_name + '/' + object_name,
-                     headers=headers)
-    return r
+    url = utils.generate_url([storage_url, container_name, object_name])
+    r = requests.get(url,  headers=headers)
+    return r.content
 
 
-def copy_object(token, storage_url, container_name, src_object_name, dest_object_name):
+def copy_object(token, storage_url, container_name,
+                src_object_name, dest_object_name):
     """
     Arguments:
 
@@ -145,13 +175,14 @@ def copy_object(token, storage_url, container_name, src_object_name, dest_object
 
     Return: 201 (Created)
     """
-    import urllib
+    src_url = '/' + utils.generate_url([container_name, src_object_name])
     headers = {'X-Auth-Token': token,
                'Content-Length': "0",
-               'X-Copy-From': '/%s/%s' % (urllib.quote(container_name), src_object_name)}
+               'X-Copy-From': src_url}
 
-    r = requests.put(storage_url + '/' + container_name + '/' + dest_object_name,
-                     headers=headers)
+    dest_url = utils.generate_url([storage_url, container_name,
+                                   dest_object_name])
+    r = requests.put(dest_url, headers=headers)
     return r.status_code
 
 
@@ -167,6 +198,6 @@ def delete_object(token, storage_url, container_name, object_name):
     Return: 204 (No Content)
     """
     headers = {'X-Auth-Token': token}
-    r = requests.delete(storage_url + '/' + container_name + '/' + object_name,
-                      headers=headers)
+    url = utils.generate_url([storage_url, container_name, object_name])
+    r = requests.delete(url, headers=headers)
     return r.status_code
