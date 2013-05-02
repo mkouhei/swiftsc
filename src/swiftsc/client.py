@@ -50,6 +50,7 @@ def list_containers(token, storage_url):
     # not use r.content that is data type is "str".
     # You must encode to unicode and utf-8 by yourself
     # if you use multibyte character.
+    r.encoding = 'utf-8'
     return r.json
 
 
@@ -140,6 +141,7 @@ def list_objects(token, storage_url, container_name):
     payload = {'format': 'json'}
     url = utils.generate_url([storage_url, container_name]) + '/'
     r = requests.get(url, headers=headers, params=payload)
+    r.encoding = 'utf-8'
     return r.json
 
 
