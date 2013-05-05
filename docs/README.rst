@@ -11,7 +11,7 @@ Requirements
 ------------
 
 * Python 2.7 or Python 3.2
-* requires 0.12.1
+* requests 0.12.1
 * python-magic 5.x of debian package or python-magic 0.4.x of PyPI
 
 
