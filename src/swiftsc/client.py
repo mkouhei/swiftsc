@@ -120,7 +120,11 @@ def create_object(token, storage_url, container_name,
     if object_name is None:
         object_name = os.path.basename(local_filepath)
     mimetype = utils.check_mimetype(local_filepath)
-    headers = {'X-Auth-Token': token, 'content-type': mimetype}
+    content_length = os.path.getsize(local_filepath)
+    # Failed to upload without "Content-Length" when uploading empty file
+    headers = {'X-Auth-Token': token,
+               'Content-Length': str(content_length),
+               'content-type': mimetype}
 
     with open(local_filepath, 'rb') as f:
         data = f.read()
