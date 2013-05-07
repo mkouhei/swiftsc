@@ -19,6 +19,8 @@ import requests
 import os.path
 import utils
 
+TIMEOUT = 5.000
+
 
 def retrieve_token(auth_url, username, password):
     """
@@ -32,7 +34,7 @@ def retrieve_token(auth_url, username, password):
         password: Swift User password
     """
     headers = {'X-Storage-User': username, 'X-Storage-Pass': password}
-    r = requests.get(auth_url, headers=headers)
+    r = requests.get(auth_url, headers=headers, timeout=TIMEOUT)
     return r.headers.get('X-Auth-Token'), r.headers.get('X-Storage-Url')
 
 
@@ -46,7 +48,8 @@ def list_containers(token, storage_url):
     """
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
-    r = requests.get(storage_url, headers=headers, params=payload)
+    r = requests.get(storage_url, headers=headers,
+                     params=payload, timeout=TIMEOUT)
     # not use r.content that is data type is "str".
     # You must encode to unicode and utf-8 by yourself
     # if you use multibyte character.
@@ -67,7 +70,7 @@ def create_container(token, storage_url, container_name):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    r = requests.put(url, headers=headers)
+    r = requests.put(url, headers=headers, timeout=TIMEOUT)
     return r.status_code
 
 
@@ -84,7 +87,7 @@ def is_container(token, storage_url, container_name):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    r = requests.get(url, headers=headers)
+    r = requests.get(url, headers=headers, timeout=TIMEOUT)
     return r.status_code
 
 
@@ -100,7 +103,7 @@ def delete_container(token, storage_url, container_name):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    r = requests.delete(url, headers=headers)
+    r = requests.delete(url, headers=headers, timeout=TIMEOUT)
     return r.status_code
 
 
@@ -129,7 +132,7 @@ def create_object(token, storage_url, container_name,
     with open(local_filepath, 'rb') as f:
         data = f.read()
     url = utils.generate_url([storage_url, container_name, object_name])
-    r = requests.put(url, headers=headers, data=data)
+    r = requests.put(url, headers=headers, data=data, timeout=TIMEOUT)
     return r.status_code
 
 
@@ -144,7 +147,7 @@ def list_objects(token, storage_url, container_name):
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
     url = utils.generate_url([storage_url, container_name]) + '/'
-    r = requests.get(url, headers=headers, params=payload)
+    r = requests.get(url, headers=headers, params=payload, timeout=TIMEOUT)
     r.encoding = 'utf-8'
     return r.json
 
@@ -162,7 +165,7 @@ def retrieve_object(token, storage_url, container_name, object_name):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
-    r = requests.get(url,  headers=headers)
+    r = requests.get(url,  headers=headers, timeout=TIMEOUT)
     return r.content
 
 
@@ -186,7 +189,7 @@ def copy_object(token, storage_url, container_name,
 
     dest_url = utils.generate_url([storage_url, container_name,
                                    dest_object_name])
-    r = requests.put(dest_url, headers=headers)
+    r = requests.put(dest_url, headers=headers, timeout=TIMEOUT)
     return r.status_code
 
 
@@ -203,5 +206,5 @@ def delete_object(token, storage_url, container_name, object_name):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
-    r = requests.delete(url, headers=headers)
+    r = requests.delete(url, headers=headers, timeout=TIMEOUT)
     return r.status_code
