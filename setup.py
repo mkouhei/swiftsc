@@ -42,7 +42,7 @@ long_description = \
 requires = ['setuptools', 'requests']
 
 setup(name='swiftsc',
-      version='0.1.1',
+      version='0.1.2',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',
