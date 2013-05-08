@@ -39,10 +39,10 @@ long_description = \
         open(os.path.join("docs","TODO.rst")).read() + \
         open(os.path.join("docs","HISTORY.rst")).read()
 
-requires = ['setuptools', 'requests']
+requires = ['setuptools', 'requests', 'python-magic']
 
 setup(name='swiftsc',
-      version='0.1.2',
+      version='0.1.3',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',
