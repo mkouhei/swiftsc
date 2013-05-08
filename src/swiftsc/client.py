@@ -17,6 +17,7 @@
 """
 import requests
 import os.path
+import inspect
 import utils
 
 TIMEOUT = 5.000
@@ -54,7 +55,11 @@ def list_containers(token, storage_url):
     # You must encode to unicode and utf-8 by yourself
     # if you use multibyte character.
     r.encoding = 'utf-8'
-    return r.json
+    if isinstance(r.json, list):
+        return r.json
+    elif inspect.ismethod(r.json):
+        # support requests 1.0 over
+        return r.json()
 
 
 def create_container(token, storage_url, container_name):
@@ -149,7 +154,11 @@ def list_objects(token, storage_url, container_name):
     url = utils.generate_url([storage_url, container_name]) + '/'
     r = requests.get(url, headers=headers, params=payload, timeout=TIMEOUT)
     r.encoding = 'utf-8'
-    return r.json
+    if isinstance(r.json, list):
+        return r.json
+    elif inspect.ismethod(r.json):
+        # support requests 1.0 over
+        return r.json()
 
 
 def retrieve_object(token, storage_url, container_name, object_name):
