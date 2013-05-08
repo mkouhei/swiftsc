@@ -39,7 +39,7 @@ long_description = \
         open(os.path.join("docs","TODO.rst")).read() + \
         open(os.path.join("docs","HISTORY.rst")).read()
 
-requires = ['setuptools', 'requests']
+requires = ['setuptools', 'requests', 'python-magic']
 
 setup(name='swiftsc',
       version='0.1.2',
