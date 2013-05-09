@@ -12,7 +12,7 @@ Requirements
 
 * Python 2.7 or Python 3.2
 * requests 0.12.1
-* python-magic 5.x of debian package or python-magic 0.4.x of PyPI
+* python-magic 5.x in debian package or python-magic 0.4.x of PyPI
 
 
 Setup
@@ -24,18 +24,37 @@ Setup
    $ sudo python setup.py install
 
 
-Contribute
-----------
+Development
+-----------
 
 Firstly copy pre-commit hook script.::
 
    $ cp -f utils/pre-commit.txt .git/hooks/pre-commit
 
-Next install python2.7 later, and python-requests, py.test. Below in Debian GNU/Linux Sid system,::
+Debian systems
+^^^^^^^^^^^^^^
 
-   $ sudo apt-get install python python-requests python-pytest pep8 python-magic python3 python3-requests python3-pytest
+Next install python2.7 later, and python-requests, python-magic, py.test, mock, pep8. Below in Debian GNU/Linux Sid system,::
+
+   $ sudo apt-get install python python-requests python-pytest pep8 python-magic python-mock
 
 Then checkout 'devel' branch for development, commit your changes. Before pull request, execute git rebase.
+
+Apply debian patch with dquilt as follwoing when making debian package.::
+
+  $ dquilt diff
+  Index: swiftsc-0.x.x/setup.py
+  ===================================================================
+  --- swiftsc-0.x.x.orig/setup.py 2013-05-08 23:53:17.000000000 +0900
+  +++ swiftsc-0.x.x/setup.py      2013-05-09 11:01:52.231198152 +0900
+  @@ -39,7 +39,7 @@
+           open(os.path.join("docs","TODO.rst")).read() + \
+           open(os.path.join("docs","HISTORY.rst")).read()
+ 
+  -requires = ['setuptools', 'requests', 'python-magic']
+  +requires = ['setuptools', 'requests']
+ 
+  (snip)
 
 
 See also
