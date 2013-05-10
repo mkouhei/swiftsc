@@ -1,5 +1,5 @@
-swiftsc (0.1.3-3) unstable; urgency=low
+swiftsc (0.2-1) unstable; urgency=low
 
   * Initial release (Closes: #nnnnnn)
 
- -- Kouhei Maeda <mkouhei@palmtb.net>  Thu, 09 May 2013 16:45:09 +0900
+ -- Kouhei Maeda <mkouhei@palmtb.net>  Fri, 10 May 2013 18:21:46 +0900
