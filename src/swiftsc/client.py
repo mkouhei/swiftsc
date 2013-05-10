@@ -88,12 +88,12 @@ def is_container(token, storage_url, container_name):
         storage_url: URL of swift storage
         container_name: container name
 
-    Return: 200
+    Return: boolean
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    r = requests.get(url, headers=headers, timeout=TIMEOUT)
-    return r.status_code
+    r = requests.head(url, headers=headers, timeout=TIMEOUT)
+    return r.ok
 
 
 def delete_container(token, storage_url, container_name):

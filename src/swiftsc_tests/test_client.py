@@ -55,12 +55,12 @@ class ClientTests(unittest.TestCase):
                          c.create_container(v.token, v.storage_url,
                                             v.cntr_name))
 
-    @patch('requests.get')
+    @patch('requests.head')
     def test_is_container(self, mock_):
         res = requests.Response()
         res.status_code = 200
         mock_.return_value = res
-        self.assertEqual(200,
+        self.assertEqual(True,
                          c.is_container(v.token, v.storage_url,
                                         v.cntr_name))
 
