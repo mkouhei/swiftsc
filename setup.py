@@ -42,7 +42,7 @@ long_description = \
 requires = ['setuptools', 'requests', 'python-magic']
 
 setup(name='swiftsc',
-      version='0.1.3',
+      version='0.2',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',
@@ -57,10 +57,9 @@ setup(name='swiftsc',
         test=[
             'pytest',
             'pep8',
-            'unittest',
             'mock',
             ],
         ),
       test_suite='tests',
-      tests_require=['pytest','pep8','unittest', 'mock'],
+      tests_require=['pytest','pep8', 'mock'],
 )

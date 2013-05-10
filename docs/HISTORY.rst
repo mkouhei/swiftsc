@@ -1,6 +1,12 @@
 History
 -------
 
+0.2 (2012-05-10)
+^^^^^^^^^^^^^^^^
+
+* add is_object method
+* change api of is_container, response is changed status code to boolean
+
 0.1.3 (2012-05-08)
 ^^^^^^^^^^^^^^^^^^
 

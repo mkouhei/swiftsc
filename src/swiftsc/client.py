@@ -88,12 +88,12 @@ def is_container(token, storage_url, container_name):
         storage_url: URL of swift storage
         container_name: container name
 
-    Return: 200
+    Return: boolean
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    r = requests.get(url, headers=headers, timeout=TIMEOUT)
-    return r.status_code
+    r = requests.head(url, headers=headers, timeout=TIMEOUT)
+    return r.ok
 
 
 def delete_container(token, storage_url, container_name):
@@ -159,6 +159,23 @@ def list_objects(token, storage_url, container_name):
     elif inspect.ismethod(r.json):
         # support requests 1.0 over
         return r.json()
+
+
+def is_object(token, storage_url, container_name, object_name):
+    """
+    Arguments:
+
+        token: authentication token
+        storage_url: URL of swift storage
+        container_name: container name
+        object_name: object name
+
+    Return: boolean
+    """
+    headers = {'X-Auth-Token': token}
+    url = utils.generate_url([storage_url, container_name, object_name])
+    r = requests.head(url,  headers=headers, timeout=TIMEOUT)
+    return r.ok
 
 
 def retrieve_object(token, storage_url, container_name, object_name):
