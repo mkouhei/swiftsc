@@ -161,6 +161,23 @@ def list_objects(token, storage_url, container_name):
         return r.json()
 
 
+def is_object(token, storage_url, container_name, object_name):
+    """
+    Arguments:
+
+        token: authentication token
+        storage_url: URL of swift storage
+        container_name: container name
+        object_name: object name
+
+    Return: boolean
+    """
+    headers = {'X-Auth-Token': token}
+    url = utils.generate_url([storage_url, container_name, object_name])
+    r = requests.head(url,  headers=headers, timeout=TIMEOUT)
+    return r.ok
+
+
 def retrieve_object(token, storage_url, container_name, object_name):
     """
     Arguments:

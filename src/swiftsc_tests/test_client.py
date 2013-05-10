@@ -91,6 +91,15 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(v.objects,
                          c.list_objects(v.token, v.storage_url, v.cntr_name))
 
+    @patch('requests.head')
+    def test_is_object(self, mock_):
+        res = requests.Response()
+        res.status_code = 200
+        mock_.return_value = res
+        self.assertEqual(True,
+                         c.is_container(v.token, v.storage_url,
+                                        v.cntr_name))
+
     @patch('requests.get')
     def test_retrieve_object(self, mock_):
         res = requests.Response()
