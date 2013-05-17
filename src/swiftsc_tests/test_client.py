@@ -108,9 +108,21 @@ class ClientTests(unittest.TestCase):
             f.seek(0)
             file_content = f.read()
         mock_.return_value = res
-        self.assertEqual(file_content,
+        self.assertEqual((True, file_content),
                          c.retrieve_object(v.token, v.storage_url, v.cntr_name,
                                            v.object_name))
+
+    @patch('requests.get')
+    def test_retrieve_object_zero(self, mock_):
+        res = requests.Response()
+        with open(v.test_zero_file, 'rb') as f:
+            res._content = f.read()
+            f.seek(0)
+            file_content = f.read()
+        mock_.return_value = res
+        self.assertEqual((True, file_content),
+                         c.retrieve_object(v.token, v.storage_url, v.cntr_name,
+                                           v.object_zero_name))
 
     @patch('requests.put')
     def test_copy_object(self, mock_):

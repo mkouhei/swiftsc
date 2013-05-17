@@ -192,7 +192,7 @@ def retrieve_object(token, storage_url, container_name, object_name):
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
     r = requests.get(url,  headers=headers, timeout=TIMEOUT)
-    return r.content
+    return r.ok, r.content
 
 
 def copy_object(token, storage_url, container_name,
