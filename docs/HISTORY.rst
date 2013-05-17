@@ -1,6 +1,11 @@
 History
 -------
 
+0.2.1 (2012-05-17)
+^^^^^^^^^^^^^^^^^^
+
+* change api of retrieve_object(), response inserted boolean before content
+
 0.2 (2012-05-10)
 ^^^^^^^^^^^^^^^^
 
