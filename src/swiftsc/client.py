@@ -18,26 +18,60 @@
 import requests
 import os.path
 import inspect
+import json
 import utils
 
 TIMEOUT = 5.000
 
 
-def retrieve_token(auth_url, username, password, verify=True):
+def retrieve_token(auth_url, username, password,
+                   tenant_name=None, verify=True):
     """
 
     Arguments:
 
-        url     : Swift API of authentication
-                  https://<Host>/auth/<api_version>
-                  ex. https://swift.example.org/auth/v1.0
-        username: Swift User name
-        password: Swift User password
-        verify  : True is check a host’s SSL certificate
+        url        : Swift API of authentication
+                     https://<Host>/auth/<api_version>
+                     ex. https://swift.example.org/auth/v1.0
+
+                     using KeyStone as follows
+                     https://<KeyStone>/<api_version>/tokens
+                     ex. https://keystone.example.org/v2.0/tokens
+        username   : Swift User name
+        password   : Swift User password
+        tenant_name: tenant name of OpenStack
+        verify     : True is check a host’s SSL certificate
     """
-    headers = {'X-Storage-User': username, 'X-Storage-Pass': password}
-    r = requests.get(auth_url, headers=headers, timeout=TIMEOUT, verify=verify)
+    if tenant_name:
+        # using OpenStack KeyStone
+        payload = set_auth_info(username, password, tenant_name)
+        headers = {'Content-Type': 'application/json'}
+        r = requests.post(auth_url, headers=headers, data=json.dumps(payload),
+                          timeout=TIMEOUT, verify=verify)
+    else:
+        # using tempauth of Swift
+        headers = {'X-Storage-User': username, 'X-Storage-Pass': password}
+        r = requests.get(auth_url, headers=headers,
+                         timeout=TIMEOUT, verify=verify)
     return r.headers.get('X-Auth-Token'), r.headers.get('X-Storage-Url')
+
+
+def set_auth_info(username, password, tenant_name):
+    """
+
+    Arguments:
+
+        username   : keystone username
+        password   : keystone password
+        tenant_name: keystone tenant name
+    """
+    payload = {
+        "auth": {
+            "passwordCredentials": {
+                "username": username,
+                "password": password},
+            "tenantName": tenant_name}}
+    return payload
 
 
 def list_containers(token, storage_url, verify=True):
