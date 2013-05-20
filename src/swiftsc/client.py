@@ -23,34 +23,36 @@ import utils
 TIMEOUT = 5.000
 
 
-def retrieve_token(auth_url, username, password):
+def retrieve_token(auth_url, username, password, verify=True):
     """
 
     Arguments:
 
-        url: Swift API of authentication
-             https://<Host>/auth/<api_version>
-             ex. https://swift.example.org/auth/v1.0
+        url     : Swift API of authentication
+                  https://<Host>/auth/<api_version>
+                  ex. https://swift.example.org/auth/v1.0
         username: Swift User name
         password: Swift User password
+        verify  : True is check a host’s SSL certificate
     """
     headers = {'X-Storage-User': username, 'X-Storage-Pass': password}
-    r = requests.get(auth_url, headers=headers, timeout=TIMEOUT)
+    r = requests.get(auth_url, headers=headers, timeout=TIMEOUT, verify=verify)
     return r.headers.get('X-Auth-Token'), r.headers.get('X-Storage-Url')
 
 
-def list_containers(token, storage_url):
+def list_containers(token, storage_url, verify=True):
     """
 
     Arguments:
 
-        token: authentication token
+        token      : authentication token
         storage_url: URL of swift storage
+        verify     : True is check a host’s SSL certificate
     """
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
     r = requests.get(storage_url, headers=headers,
-                     params=payload, timeout=TIMEOUT)
+                     params=payload, timeout=TIMEOUT, verify=verify)
     # not use r.content that is data type is "str".
     # You must encode to unicode and utf-8 by yourself
     # if you use multibyte character.
@@ -62,66 +64,70 @@ def list_containers(token, storage_url):
         return r.json()
 
 
-def create_container(token, storage_url, container_name):
+def create_container(token, storage_url, container_name, verify=True):
     """
 
     Arguments:
 
-        token: authentication token
-        storage_url: URL of swift storage
+        token         : authentication token
+        storage_url   : URL of swift storage
         container_name: container name
+        verify        : True is check a host’s SSL certificate
 
     Return: 201 (Created)
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    r = requests.put(url, headers=headers, timeout=TIMEOUT)
+    r = requests.put(url, headers=headers, timeout=TIMEOUT, verify=verify)
     return r.status_code
 
 
-def is_container(token, storage_url, container_name):
+def is_container(token, storage_url, container_name, verify=True):
     """
 
     Arguments:
 
-        token: authentication token
-        storage_url: URL of swift storage
+        token         : authentication token
+        storage_url   : URL of swift storage
         container_name: container name
+        verify        : True is check a host’s SSL certificate
 
     Return: boolean
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    r = requests.head(url, headers=headers, timeout=TIMEOUT)
+    r = requests.head(url, headers=headers, timeout=TIMEOUT, verify=verify)
     return r.ok
 
 
-def delete_container(token, storage_url, container_name):
+def delete_container(token, storage_url, container_name, verify=True):
     """
     Arguments:
 
-        token: authentication token
-        storage_url: URL of swift storage
+        token         : authentication token
+        storage_url   : URL of swift storage
         container_name: container name
+        verify        : True is check a host’s SSL certificate
 
     Return: 204 (No Content)
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    r = requests.delete(url, headers=headers, timeout=TIMEOUT)
+    r = requests.delete(url, headers=headers, timeout=TIMEOUT, verify=verify)
     return r.status_code
 
 
 def create_object(token, storage_url, container_name,
-                  local_filepath, object_name=None):
+                  local_filepath, object_name=None, verify=True):
     """
     Arguments:
 
-        token: authentication token
-        storage_url: URL of swift storage
+        token         : authentication token
+        storage_url   : URL of swift storage
         container_name: container name
         local_filepath: absolute path of upload file
-        object_name: object name (optional)
+        object_name   : object name (optional)
+        verify        : True is check a host’s SSL certificate
 
     Return: 201 (Created)
     """
@@ -137,22 +143,25 @@ def create_object(token, storage_url, container_name,
     with open(local_filepath, 'rb') as f:
         data = f.read()
     url = utils.generate_url([storage_url, container_name, object_name])
-    r = requests.put(url, headers=headers, data=data, timeout=TIMEOUT)
+    r = requests.put(url, headers=headers, data=data,
+                     timeout=TIMEOUT, verify=verify)
     return r.status_code
 
 
-def list_objects(token, storage_url, container_name):
+def list_objects(token, storage_url, container_name, verify=True):
     """
     Arguments:
 
-        token: authentication token
-        storage_url: URL of swift storage
+        token         : authentication token
+        storage_url   : URL of swift storage
         container_name: container name
+        verify        : True is check a host’s SSL certificate
     """
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
     url = utils.generate_url([storage_url, container_name]) + '/'
-    r = requests.get(url, headers=headers, params=payload, timeout=TIMEOUT)
+    r = requests.get(url, headers=headers, params=payload,
+                     timeout=TIMEOUT, verify=verify)
     r.encoding = 'utf-8'
     if isinstance(r.json, list):
         return r.json
@@ -161,50 +170,54 @@ def list_objects(token, storage_url, container_name):
         return r.json()
 
 
-def is_object(token, storage_url, container_name, object_name):
+def is_object(token, storage_url, container_name, object_name, verify=True):
     """
     Arguments:
 
-        token: authentication token
-        storage_url: URL of swift storage
+        token         : authentication token
+        storage_url   : URL of swift storage
         container_name: container name
-        object_name: object name
+        object_name   : object name
+        verify        : True is check a host’s SSL certificate
 
     Return: boolean
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
-    r = requests.head(url,  headers=headers, timeout=TIMEOUT)
+    r = requests.head(url,  headers=headers, timeout=TIMEOUT, verify=verify)
     return r.ok
 
 
-def retrieve_object(token, storage_url, container_name, object_name):
+def retrieve_object(token, storage_url, container_name,
+                    object_name, verify=True):
     """
     Arguments:
 
-        token: authentication token
-        storage_url: URL of swift storage
+        token         : authentication token
+        storage_url   : URL of swift storage
         container_name: container name
-        object_name: object name
+        object_name   : object name
+        verify        : True is check a host’s SSL certificate
 
     Return: object data
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
-    r = requests.get(url,  headers=headers, timeout=TIMEOUT)
+    r = requests.get(url,  headers=headers, timeout=TIMEOUT, verify=verify)
     return r.ok, r.content
 
 
 def copy_object(token, storage_url, container_name,
-                src_object_name, dest_object_name):
+                src_object_name, dest_object_name, verify=True):
     """
     Arguments:
 
-        token: authentication token
-        storage_url: URL of swift storage
-        container_name: container name
-        src_object_name: object name of source
+        token           : authentication token
+        storage_url     : URL of swift storage
+        container_name  : container name
+        src_object_name : object name of source
         dest_object_name: object name of destination
+        verify          : True is check a host’s SSL certificate
 
     Return: 201 (Created)
     """
@@ -215,22 +228,24 @@ def copy_object(token, storage_url, container_name,
 
     dest_url = utils.generate_url([storage_url, container_name,
                                    dest_object_name])
-    r = requests.put(dest_url, headers=headers, timeout=TIMEOUT)
+    r = requests.put(dest_url, headers=headers, timeout=TIMEOUT, verify=verify)
     return r.status_code
 
 
-def delete_object(token, storage_url, container_name, object_name):
+def delete_object(token, storage_url, container_name,
+                  object_name, verify=True):
     """
     Arguments:
 
-        token: authentication token
-        storage_url: URL of swift storage
+        token         : authentication token
+        storage_url   : URL of swift storage
         container_name: container name
-        object_name: object name
+        object_name   : object name
+        verify        : True is check a host’s SSL certificate
 
     Return: 204 (No Content)
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
-    r = requests.delete(url, headers=headers, timeout=TIMEOUT)
+    r = requests.delete(url, headers=headers, timeout=TIMEOUT, verify=verify)
     return r.status_code
