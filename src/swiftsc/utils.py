@@ -16,6 +16,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import magic
+import inspect
+
+
+def return_json(response_json):
+    if isinstance(response_json, dict) or isinstance(response_json, list):
+        return response_json
+    elif inspect.ismethod(response_json):
+        # support requests 1.0 over
+        return response_json()
 
 
 def generate_url(partial_uri_list):

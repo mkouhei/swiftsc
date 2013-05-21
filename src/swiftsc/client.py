@@ -21,6 +21,7 @@ import inspect
 import json
 import utils
 
+
 TIMEOUT = 5.000
 
 
@@ -48,12 +49,17 @@ def retrieve_token(auth_url, username, password,
         headers = {'Content-Type': 'application/json'}
         r = requests.post(auth_url, headers=headers, data=json.dumps(payload),
                           timeout=TIMEOUT, verify=verify)
+        res_d = utils.return_json(r.json)
+        token = retrieve_token_keystone(res_d)
+        storage_url = retrieve_public_url_swift(res_d)
     else:
         # using tempauth of Swift
         headers = {'X-Storage-User': username, 'X-Storage-Pass': password}
         r = requests.get(auth_url, headers=headers,
                          timeout=TIMEOUT, verify=verify)
-    return r.headers.get('X-Auth-Token'), r.headers.get('X-Storage-Url')
+        token = r.headers.get('X-Auth-Token')
+        storage_url = r.headers.get('X-Storage-Url')
+    return token, storage_url
 
 
 def set_auth_info(username, password, tenant_name):
@@ -74,6 +80,17 @@ def set_auth_info(username, password, tenant_name):
     return payload
 
 
+def retrieve_public_url_swift(r_json):
+    endpoints = [ep.get('endpoints')[0]
+                 for ep in r_json.get('access').get('serviceCatalog')
+                 if ep.get('name') == 'swift'][0]
+    return endpoints.get('publicURL')
+
+
+def retrieve_token_keystone(r_json):
+    return 'AUTH_' + r_json.get('access').get('token').get('tenant').get('id')
+
+
 def list_containers(token, storage_url, verify=True):
     """
 
@@ -91,11 +108,7 @@ def list_containers(token, storage_url, verify=True):
     # You must encode to unicode and utf-8 by yourself
     # if you use multibyte character.
     r.encoding = 'utf-8'
-    if isinstance(r.json, list):
-        return r.json
-    elif inspect.ismethod(r.json):
-        # support requests 1.0 over
-        return r.json()
+    return utils.return_json(r.json)
 
 
 def create_container(token, storage_url, container_name, verify=True):
@@ -197,11 +210,7 @@ def list_objects(token, storage_url, container_name, verify=True):
     r = requests.get(url, headers=headers, params=payload,
                      timeout=TIMEOUT, verify=verify)
     r.encoding = 'utf-8'
-    if isinstance(r.json, list):
-        return r.json
-    elif inspect.ismethod(r.json):
-        # support requests 1.0 over
-        return r.json()
+    return utils.return_json(r.json)
 
 
 def is_object(token, storage_url, container_name, object_name, verify=True):
