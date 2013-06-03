@@ -17,7 +17,6 @@
 """
 import requests
 import os.path
-import inspect
 import json
 import utils
 
@@ -88,7 +87,7 @@ def retrieve_public_url_swift(r_json):
 
 
 def retrieve_token_keystone(r_json):
-    return 'AUTH_' + r_json.get('access').get('token').get('tenant').get('id')
+    return r_json.get('access').get('token').get('id')
 
 
 def list_containers(token, storage_url, verify=True):

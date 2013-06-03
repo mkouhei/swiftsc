@@ -40,3 +40,76 @@ object_zero_name = 'empty.txt'
 dest_obj_zero_name = 'empty_1.txt'
 test_zero_file = os.path.abspath('src/swiftsc_tests/empty.txt')
 test_zero_file_mimetype = 'inode/x-empty'
+ks = u'c6f41799c8e44974bf6b2f3af9495dc0'
+kid = u'162fc4dff590424d86119eed4311680f'
+dom = u'http://example.org'
+keystone = {
+    u'access': {
+        u'metadata': {
+            u'is_admin': 0,
+            u'roles': [
+                u'20810c41473b439fb9abb2d3e320dd24']},
+        u'serviceCatalog': [
+            {u'endpoints': [{u'adminURL': u'%s:8774/v1.1/%s' % (dom, ks),
+                             u'id': u'%s/v1.1/%s' % (kid, ks),
+                             u'internalURL': u'%s:8774/v1.1/%s' % (dom, ks),
+                             u'publicURL': u'%s:8774/v1.1/%s' % (dom, ks),
+                             u'region': u'RegionOne'}],
+             u'endpoints_links': [],
+             u'name': u'nova',
+             u'type': u'compute'},
+            {u'endpoints': [{u'adminURL': u'http://example.org:9292',
+                             u'id': u'26bc2d8a056548339dc2f2bd59486ced',
+                             u'internalURL': u'http://example.org:9292',
+                             u'publicURL': u'http://example.org:9292',
+                             u'region': u'RegionOne'}],
+             u'endpoints_links': [],
+             u'name': u'glance',
+             u'type': u'image'},
+            {u'endpoints': [{u'adminURL': u'%s:8776/v1/%s' % (dom, ks),
+                             u'id': u'39e6248531344e2d923b3ea53538241a',
+                             u'internalURL': u'%s:8776/v1/%s' % (dom, ks),
+                             u'publicURL': u'%s:8776/v1/%s' % (dom, ks),
+                             u'region': u'RegionOne'}],
+             u'endpoints_links': [],
+             u'name': u'volume',
+             u'type': u'volume'},
+            {u'endpoints': [{u'adminURL': u'%s:8773/services/Admin' % dom,
+                             u'id': u'3b4359581bc34117bffd7debb0c647bc',
+                             u'internalURL': u'%s:8773/services/Cloud' % dom,
+                             u'publicURL': u'%s:8773/services/Cloud' % dom,
+                             u'region': u'RegionOne'}],
+             u'endpoints_links': [],
+             u'name': u'ec2',
+             u'type': u'ec2'},
+            {u'endpoints': [{u'adminURL': u'%s:8080/v1' % dom,
+                             u'id': u'43d72312224d4d27a4c261a6f16ecd1c',
+                             u'internalURL': u'%s:8080/v1/AUTH_%s' % (dom, ks),
+                             u'publicURL': u'%s:8080/v1/AUTH_%s' % (dom, ks),
+                             u'region': u'RegionOne'}],
+             u'endpoints_links': [],
+             u'name': u'swift',
+             u'type': u'object-store'},
+            {u'endpoints': [{u'adminURL': u'%s:35357/v2.0' % dom,
+                             u'id': u'6f8ddae43fd54ec09faad0b3fb1646dc',
+                             u'internalURL': u'%s:5000/v2.0' % dom,
+                             u'publicURL': u'https://example.org/v2.0',
+                             u'region': u'RegionOne'}],
+             u'endpoints_links': [],
+             u'name': u'keystone',
+             u'type': u'identity'}],
+        u'token': {u'expires': u'2013-06-04T08:05:44Z',
+                   u'id': u'4bbf2976ab9d4703b85207054dbdb701',
+                   u'issued_at': u'2013-06-03T08:05:44.201287',
+                   u'tenant': {u'description': None,
+                               u'enabled': True,
+                               u'id': ks,
+                               u'name': u'guest'}},
+        u'user': {u'id': u'd68c758154dc47399e3c371beb295148',
+                  u'name': u'guest',
+                  u'roles': [{u'name': u'Member'}],
+                  u'roles_links': [],
+                  u'username': u'guest'}}}
+token_keystone = '4bbf2976ab9d4703b85207054dbdb701'
+storage_url_ks = ('http://example.org:8080/v1/'
+                  'AUTH_c6f41799c8e44974bf6b2f3af9495dc0')
