@@ -141,3 +141,11 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(204,
                          c.delete_object(v.token, v.storage_url, v.cntr_name,
                                          v.object_name))
+
+    def test_retrieve_public_url_swift(self):
+        self.assertEqual(v.storage_url_ks,
+                         c.retrieve_public_url_swift(v.keystone))
+
+    def test_retrieve_token_keystone(self):
+        self.assertEqual(v.token_keystone,
+                         c.retrieve_token_keystone(v.keystone))
