@@ -18,7 +18,6 @@ Description: simple client library of OpenStack Swift
 
 Package: python3-swiftsc
 Architecture: all
-Provides: ${python:Provides}
 Depends: ${python3:Depends}, ${misc:Depends}, python3-requests, python3-magic
 Description: simple client library of OpenStack Swift for python3
  This tool is simple client library of OpenStack Swift for python3.
