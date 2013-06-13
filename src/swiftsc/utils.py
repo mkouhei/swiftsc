@@ -17,6 +17,7 @@
 """
 import magic
 import inspect
+import sys
 
 
 def return_json(response_json):
@@ -63,4 +64,6 @@ def check_mimetype(filepath):
         mimetype = magic.from_file(filepath, mime=True)
     else:
         raise RuntimeError("Not support python-magic in this environment")
+    if sys.version_info > (3, 0) and isinstance(mimetype, bytes):
+        mimetype = mimetype.decode('utf-8')
     return mimetype
