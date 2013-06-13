@@ -18,7 +18,7 @@
 import requests
 import os.path
 import json
-import utils
+from swiftsc import utils
 
 
 TIMEOUT = 5.000

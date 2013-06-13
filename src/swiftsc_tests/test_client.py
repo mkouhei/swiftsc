@@ -23,7 +23,7 @@ import sys
 import os.path
 sys.path.append(os.path.abspath('src'))
 import swiftsc.client as c
-import test_vars as v
+import swiftsc_tests.test_vars as v
 
 
 class ClientTests(unittest.TestCase):
@@ -41,7 +41,8 @@ class ClientTests(unittest.TestCase):
     @patch('requests.get')
     def test_list_containers(self, mock_):
         res = requests.Response()
-        res._content = v.containers_json
+        res._content = v.containers_json.encode('utf-8')
+        res.status_code = 200
         mock_.return_value = res
         self.assertListEqual(v.containers,
                              c.list_containers(v.token, v.storage_url))
@@ -86,7 +87,8 @@ class ClientTests(unittest.TestCase):
     @patch('requests.get')
     def test_list_objects(self, mock_):
         res = requests.Response()
-        res._content = v.objects_json
+        res._content = v.objects_json.encode('utf-8')
+        res.status_code = 200
         mock_.return_value = res
         self.assertEqual(v.objects,
                          c.list_objects(v.token, v.storage_url, v.cntr_name))
@@ -107,6 +109,7 @@ class ClientTests(unittest.TestCase):
             res._content = f.read()
             f.seek(0)
             file_content = f.read()
+        res.status_code = 200
         mock_.return_value = res
         self.assertEqual((True, file_content),
                          c.retrieve_object(v.token, v.storage_url, v.cntr_name,
@@ -119,6 +122,7 @@ class ClientTests(unittest.TestCase):
             res._content = f.read()
             f.seek(0)
             file_content = f.read()
+        res.status_code = 200
         mock_.return_value = res
         self.assertEqual((True, file_content),
                          c.retrieve_object(v.token, v.storage_url, v.cntr_name,

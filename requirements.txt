@@ -1,4 +1,4 @@
-pep8==1.4
-mock==0.8.0
-requests
+pep8>=1.3
+mock>=0.8
+requests>=0.12.1
 python-magic
