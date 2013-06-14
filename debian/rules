@@ -4,18 +4,37 @@
 #export DH_VERBOSE=1
 
 %:
-	dh $@ --with python2
+	dh $@ --with python2,python3
+
+override_dh_auto_build:
+	for py in $(shell pyversions -vr); do \
+		python$$py setup.py build --build-base=_build$$py; \
+	done
 
 override_dh_auto_test:
 	set -e; \
 	for py in $(shell pyversions -vr); do \
-		py.test-$$py -v $(CURDIR)/_build/lib.$(shell python -c 'import distutils.util as d; print d.get_platform()')-$$py; \
+		if [ "$$py" < "3.0" ]; then \
+			py.test-$$py -v $(CURDIR)/_build/lib.$(shell python -c 'import distutils.util as d; print d.get_platform()')-$$py; \
+		else \
+			py.test-3 -v $(CURDIR)/_build/lib ;\
+		fi ;\
 	done
 
-override_dh_install:
-	dh_install
-	find $(CURDIR)/debian/python-swiftsc -name "*pyc" -delete
-	find $(CURDIR)/debian/python-swiftsc -type d -a -empty -delete
+override_dh_auto_install:
+	python setup.py install --no-compile -O0 --install-layout=deb \
+		--root $(CURDIR)/debian/python-swiftsc && \
+	python3 setup.py install --no-compile -O0 --install-layout=deb \
+		--root $(CURDIR)/debian/python3-swiftsc
 	rm -rf $(CURDIR)/debian/python-swiftsc/usr/share/pyshared/swiftsc_tests
 	rm -rf $(CURDIR)/debian/python-swiftsc/usr/lib/python2.6/dist-packages/swiftsc_tests
 	rm -rf $(CURDIR)/debian/python-swiftsc/usr/lib/python2.7/dist-packages/swiftsc_tests
+	rm -rf $(CURDIR)/debian/python3-swiftsc/usr/lib/python3/dist-packages/swiftsc_tests
+
+override_dh_auto_clean:
+	dh_clean
+	for py in $(shell pyversions -vr); do \
+		python$$py setup.py clean --build-temp=_build && \
+		python$$py setup.py clean --build-temp=_build$$py; \
+	done
+	rm -rf $(CURDIR)/_build

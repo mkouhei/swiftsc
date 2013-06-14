@@ -1,7 +1,7 @@
 language: python
 python:
   - "2.7"
-before_install:
-  - sudo apt-get install python-mock python-py pep8 python-requests python-magic
+  - "3.2"
+  - "3.3"
 script:
-  - bash utils/pre-commit.txt
+  - bash utils/testing_travis.sh
