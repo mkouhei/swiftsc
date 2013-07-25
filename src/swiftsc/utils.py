@@ -67,3 +67,25 @@ def check_mimetype(filepath):
     if sys.version_info > (3, 0) and isinstance(mimetype, bytes):
         mimetype = mimetype.decode('utf-8')
     return mimetype
+
+
+def check_mimetype_buffer(fileobj):
+    """check mimetype of file
+
+    Argument:
+
+        filename: target filename path
+    """
+    if 'open' in dir(magic):
+        # for python-magic package of Debian Wheezy/Sid, Ubuntu 12.04
+        m = magic.open(magic.MAGIC_MIME)
+        m.load()
+        mimetype = m.buffer(fileobj.read()).split('; ')[0]
+    elif 'from_file' in dir(magic):
+        # for pip install python-magic
+        mimetype = magic.from_buffer(fileobj.read(), mime=True)
+    else:
+        raise RuntimeError("Not support python-magic in this environment")
+    if sys.version_info > (3, 0) and isinstance(mimetype, bytes):
+        mimetype = mimetype.decode('utf-8')
+    return mimetype
