@@ -20,10 +20,6 @@ import os.path
 import json
 import sys
 import _io
-if sys.version_info > (3, 0):
-    from io import StringIO
-else:
-    from StringIO import StringIO
 from swiftsc import utils
 
 
@@ -179,10 +175,9 @@ def create_object(token, storage_url, container_name,
         container_name: container name
         local_file    : absolute path of upload file
                         or
-                        file object (stdin via pipe)
+                        file object (from stdin pipe)
         object_name   : object name (optional)
                         default is local_file basename or
-                        uuid v4 hex when from stdin via pipe
         verify        : True is check a host’s SSL certificate
 
     Return: 201 (Created)
@@ -191,13 +186,10 @@ def create_object(token, storage_url, container_name,
          isinstance(local_file, file)) or
         (sys.version_info > (3, 0) and
          isinstance(local_file, _io.FileIO))):
-        # stdin via pipe
-        local_file.seek(0)
-        mimetype = utils.check_mimetype_buffer(local_file)
-        local_file.seek(0)
-        content_length = len(local_file.read())
-        local_file.seek(0)
-        data = local_file.read()
+        # from stdin pipe
+        (mimetype,
+         content_length,
+         data) = utils.retrieve_info_from_buffer(local_file)
     else:
         with open(local_file, 'rb') as f:
             data = f.read()
