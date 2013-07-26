@@ -1,6 +1,12 @@
 History
 -------
 
+0.5 (2013-07-27)
+^^^^^^^^^^^^^^^^
+
+* support input file from stdin pipe, redirect
+* detect "python-magic" debian package in setup.py
+
 0.4 (2013-06-13)
 ^^^^^^^^^^^^^^^^
 
