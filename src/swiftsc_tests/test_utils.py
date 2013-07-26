@@ -33,3 +33,19 @@ class UtilsTests(unittest.TestCase):
     def test_check_mimetype(self):
         self.assertEqual(v.test_file_mimetype,
                          u.check_mimetype(v.test_file))
+
+    def test_check_mimetype_buffer(self):
+        fileobj = open(v.test_file, 'rb')
+        self.assertEqual(v.test_file_mimetype,
+                         u.check_mimetype_buffer(fileobj))
+        fileobj.close()
+
+    def test_retrieve_info_from_buffer(self):
+        fileobj = open(v.test_file, 'rb')
+        file_content = fileobj.read()
+        fileobj.seek(0)
+        self.assertEqual((v.test_file_mimetype,
+                          v.test_file_size,
+                          file_content),
+                         u.retrieve_info_from_buffer(fileobj))
+        fileobj.close()

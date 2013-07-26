@@ -18,6 +18,8 @@
 import requests
 import os.path
 import json
+import sys
+import _io
 from swiftsc import utils
 
 
@@ -164,30 +166,44 @@ def delete_container(token, storage_url, container_name, verify=True):
 
 
 def create_object(token, storage_url, container_name,
-                  local_filepath, object_name=None, verify=True):
+                  local_file, object_name=None, verify=True):
     """
     Arguments:
 
         token         : authentication token
         storage_url   : URL of swift storage
         container_name: container name
-        local_filepath: absolute path of upload file
+        local_file    : absolute path of upload file
+                        or
+                        file object (from stdin pipe)
         object_name   : object name (optional)
+                        default is local_file basename or
         verify        : True is check a host’s SSL certificate
 
     Return: 201 (Created)
     """
+    if ((sys.version_info < (3, 0) and
+         isinstance(local_file, file)) or
+        (sys.version_info > (3, 0) and
+         isinstance(local_file, _io.FileIO))):
+        # from stdin pipe
+        (mimetype,
+         content_length,
+         data) = utils.retrieve_info_from_buffer(local_file)
+    else:
+        with open(local_file, 'rb') as f:
+            data = f.read()
+        content_length = os.path.getsize(local_file)
+        mimetype = utils.check_mimetype(local_file)
+
     if object_name is None:
-        object_name = os.path.basename(local_filepath)
-    mimetype = utils.check_mimetype(local_filepath)
-    content_length = os.path.getsize(local_filepath)
+        object_name = os.path.basename(local_file)
+
     # Failed to upload without "Content-Length" when uploading empty file
     headers = {'X-Auth-Token': token,
                'Content-Length': str(content_length),
                'content-type': mimetype}
 
-    with open(local_filepath, 'rb') as f:
-        data = f.read()
     url = utils.generate_url([storage_url, container_name, object_name])
     r = requests.put(url, headers=headers, data=data,
                      timeout=TIMEOUT, verify=verify)

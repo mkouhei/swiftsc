@@ -84,6 +84,18 @@ class ClientTests(unittest.TestCase):
                          c.create_object(v.token, v.storage_url, v.cntr_name,
                                          test_file, v.object_name))
 
+    @patch('requests.put')
+    def test_create_object_with_file_object(self, mock_):
+        res = requests.Response()
+        res.status_code = 201
+        mock_.return_value = res
+        import subprocess
+        test_file = open(v.test_file, 'rb', buffering=0)
+        self.assertEqual(201,
+                         c.create_object(v.token, v.storage_url, v.cntr_name,
+                                         test_file, v.object_name))
+        test_file.close()
+
     @patch('requests.get')
     def test_list_objects(self, mock_):
         res = requests.Response()

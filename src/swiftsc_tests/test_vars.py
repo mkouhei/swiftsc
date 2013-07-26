@@ -36,6 +36,7 @@ object_name = 'sample.txt'
 dest_obj_name = 'sample_1.txt'
 test_file = os.path.abspath('src/swiftsc_tests/sample.txt')
 test_file_mimetype = 'text/plain'
+test_file_size = os.path.getsize(test_file)
 object_zero_name = 'empty.txt'
 dest_obj_zero_name = 'empty_1.txt'
 test_zero_file = os.path.abspath('src/swiftsc_tests/empty.txt')

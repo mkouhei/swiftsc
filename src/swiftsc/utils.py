@@ -18,6 +18,7 @@
 import magic
 import inspect
 import sys
+from io import BytesIO
 
 
 def return_json(response_json):
@@ -67,3 +68,44 @@ def check_mimetype(filepath):
     if sys.version_info > (3, 0) and isinstance(mimetype, bytes):
         mimetype = mimetype.decode('utf-8')
     return mimetype
+
+
+def check_mimetype_buffer(fileobj):
+    """check mimetype of file
+
+    Argument:
+
+        filename: target filename path
+    """
+    if 'open' in dir(magic):
+        # for python-magic package of Debian Wheezy/Sid, Ubuntu 12.04
+        m = magic.open(magic.MAGIC_MIME)
+        m.load()
+        mimetype = m.buffer(fileobj.read()).split('; ')[0]
+    elif 'from_file' in dir(magic):
+        # for pip install python-magic
+        mimetype = magic.from_buffer(fileobj.read(), mime=True)
+    else:
+        raise RuntimeError("Not support python-magic in this environment")
+    if sys.version_info > (3, 0) and isinstance(mimetype, bytes):
+        mimetype = mimetype.decode('utf-8')
+    return mimetype
+
+
+def retrieve_info_from_buffer(file_object):
+    """check mimetype of file object
+
+    Argument:
+
+        file_object: target file object
+    """
+    bio = BytesIO()
+    bio.write(file_object.read())
+    bio.seek(0)
+    mimetype = check_mimetype_buffer(bio)
+    bio.seek(0)
+    content_length = len(bio.read())
+    bio.seek(0)
+    data = bio.read()
+    bio.close()
+    return (mimetype, content_length, data)
