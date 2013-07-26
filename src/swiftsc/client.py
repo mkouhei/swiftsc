@@ -190,15 +190,14 @@ def create_object(token, storage_url, container_name,
     if ((sys.version_info < (3, 0) and
          isinstance(local_file, file)) or
         (sys.version_info > (3, 0) and
-         isinstance(local_file, _io.TextIOWrapper))):
+         isinstance(local_file, _io.FileIO))):
         # stdin via pipe
-        data = StringIO()
-        data.write(local_file.read())
-        data.seek(0)
-        mimetype = utils.check_mimetype_buffer(data)
-        data.seek(0)
-        content_length = len(data.read())
-        data.seek(0)
+        local_file.seek(0)
+        mimetype = utils.check_mimetype_buffer(local_file)
+        local_file.seek(0)
+        content_length = len(local_file.read())
+        local_file.seek(0)
+        data = local_file.read()
     else:
         with open(local_file, 'rb') as f:
             data = f.read()
