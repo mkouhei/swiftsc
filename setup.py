@@ -18,6 +18,7 @@
 
 import os
 import sys
+import subprocess
 from setuptools import setup, find_packages
 
 sys.path.insert(0, 'src')
@@ -42,7 +43,21 @@ long_description = \
         open(os.path.join("docs","TODO.rst")).read() + \
         open(os.path.join("docs","HISTORY.rst")).read()
 
-requires = ['setuptools', 'requests', 'python-magic']
+
+def is_debian_system():
+    fnull = open(os.devnull, 'w')
+    if (subprocess.call(['which', 'apt-get'], stdout=fnull) == 0 and
+        subprocess.call(['apt-cache', 'show', 'python-magic'], stdout=fnull) == 0):
+        fnull.close()
+        return True
+    else:
+        fnull.close()
+        return False
+
+requires = ['setuptools', 'requests']
+if not is_debian_system():
+    requires.append('python-magic')
+
 
 setup(name='swiftsc',
       version='0.4',
