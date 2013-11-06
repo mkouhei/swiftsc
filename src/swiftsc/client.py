@@ -19,7 +19,8 @@ import requests
 import os.path
 import json
 import sys
-import _io
+if sys.version_info > (3, 0):
+    import _io
 from swiftsc import utils
 
 
