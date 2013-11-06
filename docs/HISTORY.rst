@@ -1,6 +1,12 @@
 History
 -------
 
+0.5.1 (2013-11-06)
+^^^^^^^^^^^^^^^^^^
+
+* fixes fail to load _io module in Python 2.6
+* support Python 2.6
+
 0.5 (2013-07-27)
 ^^^^^^^^^^^^^^^^
 
