@@ -23,10 +23,6 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 import multiprocessing
 
-sys.path.insert(0, 'src')
-import swiftsc
-
-
 class Tox(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
@@ -86,8 +82,7 @@ setup(name='swiftsc',
       url='https://github.com/mkouhei/swiftsc',
       license=' GNU General Public License version 3',
       classifiers=classifiers,
-      packages=find_packages('src'),
-      package_dir={'': 'src'},
+      packages=find_packages(),
       install_requires=requires,
       tests_require=['tox'],
       cmdclass={'test': Tox},)

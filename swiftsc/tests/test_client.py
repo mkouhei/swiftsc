@@ -19,8 +19,8 @@ import unittest
 import mock
 from mock import patch
 import requests
-import swiftsc.client as c
-import swiftsc_tests.test_vars as v
+from swiftsc import client as c
+from swiftsc.tests import test_vars as v
 
 
 class ClientTests(unittest.TestCase):

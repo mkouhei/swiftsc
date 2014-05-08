@@ -16,8 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import unittest
-import swiftsc.utils as u
-import swiftsc_tests.test_vars as v
+from swiftsc import utils as u
+from swiftsc.tests import test_vars as v
 
 
 class UtilsTests(unittest.TestCase):
