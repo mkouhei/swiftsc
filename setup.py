@@ -23,6 +23,7 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 import multiprocessing
 
+
 class Tox(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
@@ -38,7 +39,8 @@ class Tox(TestCommand):
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "License :: OSI Approved :: "
+    "GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python",
     "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3.2",
@@ -52,16 +54,17 @@ classifiers = [
     "Environment :: OpenStack",
 ]
 
-long_description = \
-        open(os.path.join("docs","README.rst")).read() + \
-        open(os.path.join("docs","TODO.rst")).read() + \
-        open(os.path.join("docs","HISTORY.rst")).read()
+long_description = (
+    open(os.path.join("docs", "README.rst")).read() +
+    open(os.path.join("docs", "TODO.rst")).read() +
+    open(os.path.join("docs", "HISTORY.rst")).read())
 
 
 def is_debian_system():
     fnull = open(os.devnull, 'w')
     if (subprocess.call(['which', 'apt-get'], stdout=fnull) == 0 and
-        subprocess.call(['apt-cache', 'show', 'python-magic'], stdout=fnull) == 0):
+        subprocess.call(['apt-cache', 'show', 'python-magic'],
+                        stdout=fnull) == 0):
         fnull.close()
         return True
     else:
