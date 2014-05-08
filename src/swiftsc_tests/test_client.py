@@ -19,9 +19,6 @@ import unittest
 import mock
 from mock import patch
 import requests
-import sys
-import os.path
-sys.path.append(os.path.abspath('src'))
 import swiftsc.client as c
 import swiftsc_tests.test_vars as v
 
