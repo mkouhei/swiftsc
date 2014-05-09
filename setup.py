@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    Copyright (C) 2013 Kouhei Maeda <mkouhei@palmtb.net>
+    Copyright (C) 2013, 2014 Kouhei Maeda <mkouhei@palmtb.net>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,34 +20,51 @@ import os
 import sys
 import subprocess
 from setuptools import setup, find_packages
+from setuptools.command.test import test as TestCommand
+import multiprocessing
 
-sys.path.insert(0, 'src')
-import swiftsc
+
+class Tox(TestCommand):
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = []
+        self.test_suite = True
+
+    def run_tests(self):
+        import tox
+        errno = tox.cmdline(self.test_args)
+        sys.exit(errno)
+
 
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "License :: OSI Approved :: "
+    "GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python",
     "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3.2",
     "Programming Language :: Python :: 3.3",
+    "Programming Language :: Python :: 3.4",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Internet",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Environment :: OpenStack",
 ]
 
-long_description = \
-        open(os.path.join("docs","README.rst")).read() + \
-        open(os.path.join("docs","TODO.rst")).read() + \
-        open(os.path.join("docs","HISTORY.rst")).read()
+long_description = (
+    open("README.rst").read() +
+    open(os.path.join("docs", "TODO.rst")).read() +
+    open(os.path.join("docs", "HISTORY.rst")).read())
 
 
 def is_debian_system():
     fnull = open(os.devnull, 'w')
     if (subprocess.call(['which', 'apt-get'], stdout=fnull) == 0 and
-        subprocess.call(['apt-cache', 'show', 'python-magic'], stdout=fnull) == 0):
+        subprocess.call(['apt-cache', 'show', 'python-magic'],
+                        stdout=fnull) == 0):
         fnull.close()
         return True
     else:
@@ -60,7 +77,7 @@ if not is_debian_system():
 
 
 setup(name='swiftsc',
-      version='0.5.1',
+      version='0.5.2',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',
@@ -68,16 +85,7 @@ setup(name='swiftsc',
       url='https://github.com/mkouhei/swiftsc',
       license=' GNU General Public License version 3',
       classifiers=classifiers,
-      packages=find_packages('src'),
-      package_dir={'': 'src'},
+      packages=find_packages(),
       install_requires=requires,
-      extras_require=dict(
-        test=[
-            'pytest',
-            'pep8',
-            'mock',
-            ],
-        ),
-      test_suite='tests',
-      tests_require=['pytest','pep8', 'mock'],
-)
+      tests_require=['tox'],
+      cmdclass={'test': Tox},)

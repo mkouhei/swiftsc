@@ -6,6 +6,13 @@ This tool is simple client library of OpenStack Swift.
 This tool is intended to be used in the module and Python script other.
 The main purpose of this tool is used as a core module for backup tool.
 
+.. image:: https://secure.travis-ci.org/mkouhei/swiftsc.png?branch=devel
+   :target: http://travis-ci.org/mkouhei/swiftsc
+.. image:: https://coveralls.io/repos/mkouhei/swiftsc/badge.png?branch=devel
+   :target: https://coveralls.io/r/mkouhei/swiftsc?branch=devel
+.. image:: https://pypip.in/v/swiftsc/badge.png
+   :target: https://crate.io/packages/swiftsc
+
 
 Requirements
 ------------
@@ -50,9 +57,9 @@ Firstly copy pre-commit hook script.::
 Debian systems
 ^^^^^^^^^^^^^^
 
-Next install python2.7, python3.2 later, and python-requests, python-magic, py.test, mock, pep8. Below in Debian GNU/Linux Sid system,::
+Next install python2.7, python3.2 later, and python-requests, python-magic, python-tox, pychecker. Below in Debian GNU/Linux Sid system,::
 
-   $ sudo apt-get install python python-requests python-pytest pep8 python-magic python-mock python3-requests python3-pytest python3-magic python3-mock
+   $ sudo apt-get install python python-requests python-pytest pep8 python-magic python-tox pychecker
 
 Then checkout 'devel' branch for development, commit your changes. Before pull request, execute git rebase.
 
