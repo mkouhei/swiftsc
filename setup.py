@@ -77,7 +77,7 @@ if not is_debian_system():
 
 
 setup(name='swiftsc',
-      version='0.5.1',
+      version='0.5.2',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',
