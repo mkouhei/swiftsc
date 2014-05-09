@@ -16,11 +16,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import unittest
+from httpretty import HTTPretty, httprettified
 from swiftsc import utils as u
+from swiftsc import client as c
 from swiftsc.tests import test_vars as v
 
 
 class UtilsTests(unittest.TestCase):
+
+    @httprettified
+    def test_return_json(self):
+        HTTPretty.register_uri(HTTPretty.GET,
+                               '%s/%s/' % (v.storage_url,
+                                           v.cntr_name),
+                               body=v.objects_json.encode('utf-8'))
+        res = c.list_objects(v.token, v.storage_url, v.cntr_name)
+        self.assertTrue(isinstance(res, list))
 
     def test_generate_uri(self):
         self.assertEqual(u.generate_url(v.partial_uri_list_2), v.auth_url)

@@ -57,9 +57,9 @@ Firstly copy pre-commit hook script.::
 Debian systems
 ^^^^^^^^^^^^^^
 
-Next install python2.7, python3.2 later, and python-requests, python-magic, py.test, mock, pep8. Below in Debian GNU/Linux Sid system,::
+Next install python2.7, python3.2 later, and python-requests, python-magic, python-tox. Below in Debian GNU/Linux Sid system,::
 
-   $ sudo apt-get install python python-requests python-pytest pep8 python-magic python-mock python3-requests python3-pytest python3-magic python3-mock
+   $ sudo apt-get install python python-requests python-pytest pep8 python-magic python-tox
 
 Then checkout 'devel' branch for development, commit your changes. Before pull request, execute git rebase.
 
