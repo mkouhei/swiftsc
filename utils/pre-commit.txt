@@ -6,4 +6,4 @@ find swiftsc -name '*.pyc' -delete
 python setup.py test || exit 1
 python setup.py check -r || exit 1
 pychecker -X -s swiftsc/*.py
-pychecker -X -s swiftsc/tests/*.py
+pychecker -i -q -X -s swiftsc/tests/*.py
