@@ -49,18 +49,21 @@ def retrieve_token(auth_url, username, password,
         # using OpenStack KeyStone
         payload = set_auth_info(username, password, tenant_name)
         headers = {'Content-Type': 'application/json'}
-        r = requests.post(auth_url, headers=headers, data=json.dumps(payload),
-                          timeout=TIMEOUT, verify=verify)
-        res_d = utils.return_json(r.json)
+        res = requests.post(auth_url,
+                            headers=headers,
+                            data=json.dumps(payload),
+                            timeout=TIMEOUT,
+                            verify=verify)
+        res_d = utils.return_json(res.json)
         token = retrieve_token_keystone(res_d)
         storage_url = retrieve_public_url_swift(res_d)
     else:
         # using tempauth of Swift
         headers = {'X-Storage-User': username, 'X-Storage-Pass': password}
-        r = requests.get(auth_url, headers=headers,
-                         timeout=TIMEOUT, verify=verify)
-        token = r.headers.get('X-Auth-Token')
-        storage_url = r.headers.get('X-Storage-Url')
+        res = requests.get(auth_url, headers=headers,
+                           timeout=TIMEOUT, verify=verify)
+        token = res.headers.get('X-Auth-Token')
+        storage_url = res.headers.get('X-Storage-Url')
     return token, storage_url
 
 
@@ -83,6 +86,10 @@ def set_auth_info(username, password, tenant_name):
 
 
 def retrieve_public_url_swift(r_json):
+    """
+    Argument: response json
+    Return: id
+    """
     endpoints = [ep.get('endpoints')[0]
                  for ep in r_json.get('access').get('serviceCatalog')
                  if ep.get('name') == 'swift'][0]
@@ -90,6 +97,10 @@ def retrieve_public_url_swift(r_json):
 
 
 def retrieve_token_keystone(r_json):
+    """
+    Argument: response json
+    Return: id
+    """
     return r_json.get('access').get('token').get('id')
 
 
@@ -104,13 +115,13 @@ def list_containers(token, storage_url, verify=True):
     """
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
-    r = requests.get(storage_url, headers=headers,
-                     params=payload, timeout=TIMEOUT, verify=verify)
-    # not use r.content that is data type is "str".
+    res = requests.get(storage_url, headers=headers,
+                       params=payload, timeout=TIMEOUT, verify=verify)
+    # not use res.content that is data type is "str".
     # You must encode to unicode and utf-8 by yourself
     # if you use multibyte character.
-    r.encoding = 'utf-8'
-    return utils.return_json(r.json)
+    res.encoding = 'utf-8'
+    return utils.return_json(res.json)
 
 
 def create_container(token, storage_url, container_name, verify=True):
@@ -127,8 +138,8 @@ def create_container(token, storage_url, container_name, verify=True):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    r = requests.put(url, headers=headers, timeout=TIMEOUT, verify=verify)
-    return r.status_code
+    res = requests.put(url, headers=headers, timeout=TIMEOUT, verify=verify)
+    return res.status_code
 
 
 def is_container(token, storage_url, container_name, verify=True):
@@ -145,8 +156,8 @@ def is_container(token, storage_url, container_name, verify=True):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    r = requests.head(url, headers=headers, timeout=TIMEOUT, verify=verify)
-    return r.ok
+    res = requests.head(url, headers=headers, timeout=TIMEOUT, verify=verify)
+    return res.ok
 
 
 def delete_container(token, storage_url, container_name, verify=True):
@@ -162,12 +173,11 @@ def delete_container(token, storage_url, container_name, verify=True):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    r = requests.delete(url, headers=headers, timeout=TIMEOUT, verify=verify)
-    return r.status_code
+    res = requests.delete(url, headers=headers, timeout=TIMEOUT, verify=verify)
+    return res.status_code
 
 
-def create_object(token, storage_url, container_name,
-                  local_file, object_name=None, verify=True):
+def create_object(*args, **kwargs):
     """
     Arguments:
 
@@ -183,6 +193,19 @@ def create_object(token, storage_url, container_name,
 
     Return: 201 (Created)
     """
+    token = args[0]
+    storage_url = args[1]
+    container_name = args[2]
+    local_file = args[3]
+    if kwargs.get('object_name'):
+        object_name = kwargs.get('object_name')
+    else:
+        object_name = None
+    if kwargs.get('verify'):
+        verify = kwargs.get('verify')
+    else:
+        verify = True
+
     if ((sys.version_info < (3, 0) and
          isinstance(local_file, file)) or
         (sys.version_info > (3, 0) and
@@ -192,8 +215,8 @@ def create_object(token, storage_url, container_name,
          content_length,
          data) = utils.retrieve_info_from_buffer(local_file)
     else:
-        with open(local_file, 'rb') as f:
-            data = f.read()
+        with open(local_file, 'rb') as _file:
+            data = _file.read()
         content_length = os.path.getsize(local_file)
         mimetype = utils.check_mimetype(local_file)
 
@@ -206,9 +229,9 @@ def create_object(token, storage_url, container_name,
                'content-type': mimetype}
 
     url = utils.generate_url([storage_url, container_name, object_name])
-    r = requests.put(url, headers=headers, data=data,
-                     timeout=TIMEOUT, verify=verify)
-    return r.status_code
+    res = requests.put(url, headers=headers, data=data,
+                       timeout=TIMEOUT, verify=verify)
+    return res.status_code
 
 
 def list_objects(token, storage_url, container_name, verify=True):
@@ -223,10 +246,10 @@ def list_objects(token, storage_url, container_name, verify=True):
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
     url = utils.generate_url([storage_url, container_name]) + '/'
-    r = requests.get(url, headers=headers, params=payload,
-                     timeout=TIMEOUT, verify=verify)
-    r.encoding = 'utf-8'
-    return utils.return_json(r.json)
+    res = requests.get(url, headers=headers, params=payload,
+                       timeout=TIMEOUT, verify=verify)
+    res.encoding = 'utf-8'
+    return utils.return_json(res.json)
 
 
 def is_object(token, storage_url, container_name, object_name, verify=True):
@@ -243,8 +266,8 @@ def is_object(token, storage_url, container_name, object_name, verify=True):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
-    r = requests.head(url,  headers=headers, timeout=TIMEOUT, verify=verify)
-    return r.ok
+    res = requests.head(url, headers=headers, timeout=TIMEOUT, verify=verify)
+    return res.ok
 
 
 def retrieve_object(token, storage_url, container_name,
@@ -262,12 +285,11 @@ def retrieve_object(token, storage_url, container_name,
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
-    r = requests.get(url,  headers=headers, timeout=TIMEOUT, verify=verify)
-    return r.ok, r.content
+    res = requests.get(url, headers=headers, timeout=TIMEOUT, verify=verify)
+    return res.ok, res.content
 
 
-def copy_object(token, storage_url, container_name,
-                src_object_name, dest_object_name, verify=True):
+def copy_object(*args, **kwargs):
     """
     Arguments:
 
@@ -280,6 +302,15 @@ def copy_object(token, storage_url, container_name,
 
     Return: 201 (Created)
     """
+    token = args[0]
+    storage_url = args[1]
+    container_name = args[2]
+    src_object_name = args[3]
+    dest_object_name = args[4]
+    if kwargs.get('verify'):
+        verify = kwargs.get('verify')
+    else:
+        verify = True
     src_url = '/' + utils.generate_url([container_name, src_object_name])
     headers = {'X-Auth-Token': token,
                'Content-Length': "0",
@@ -287,8 +318,9 @@ def copy_object(token, storage_url, container_name,
 
     dest_url = utils.generate_url([storage_url, container_name,
                                    dest_object_name])
-    r = requests.put(dest_url, headers=headers, timeout=TIMEOUT, verify=verify)
-    return r.status_code
+    res = requests.put(dest_url, headers=headers,
+                       timeout=TIMEOUT, verify=verify)
+    return res.status_code
 
 
 def delete_object(token, storage_url, container_name,
@@ -306,5 +338,5 @@ def delete_object(token, storage_url, container_name,
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
-    r = requests.delete(url, headers=headers, timeout=TIMEOUT, verify=verify)
-    return r.status_code
+    res = requests.delete(url, headers=headers, timeout=TIMEOUT, verify=verify)
+    return res.status_code
