@@ -19,8 +19,6 @@ import magic
 import inspect
 import sys
 from io import BytesIO
-if sys.version_info > (3, 0):
-    import _io
 
 
 def return_json(response_json):
@@ -127,10 +125,6 @@ def check_file(file_path):
     :param file_path: :string:`file path`
     '''
     is_pipe = False
-    if sys.version_info < (3, 0):
-        if isinstance(file_path, file):
-            is_pipe = True
-    elif sys.version_info >= (3, 0):
-        if isinstance(file_path, _io.FileIO):
-            is_pipe = True
+    if hasattr(file_path, 'fileno'):
+        is_pipe = True
     return is_pipe
