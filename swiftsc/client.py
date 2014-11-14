@@ -18,9 +18,6 @@
 import requests
 import os.path
 import json
-import sys
-if sys.version_info > (3, 0):
-    import _io
 from swiftsc import utils
 
 
@@ -206,10 +203,7 @@ def create_object(*args, **kwargs):
     else:
         verify = True
 
-    if ((sys.version_info < (3, 0) and
-         isinstance(local_file, file)) or
-        (sys.version_info > (3, 0) and
-         isinstance(local_file, _io.FileIO))):
+    if utils.check_file(local_file):
         # from stdin pipe
         (mimetype,
          content_length,

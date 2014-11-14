@@ -19,6 +19,8 @@ import magic
 import inspect
 import sys
 from io import BytesIO
+if sys.version_info > (3, 0):
+    import _io
 
 
 def return_json(response_json):
@@ -116,3 +118,19 @@ def retrieve_info_from_buffer(file_object):
     data = bio.read()
     bio.close()
     return (mimetype, content_length, data)
+
+
+def check_file(file_path):
+    '''
+    Returns: `bool`
+
+    :param file_path: :string:`file path`
+    '''
+    is_pipe = False
+    if sys.version_info < (3, 0):
+        if isinstance(file_path, file):
+            is_pipe = True
+    elif sys.version_info >= (3, 0):
+        if isinstance(file_path, _io.FileIO):
+            is_pipe = True
+    return is_pipe
