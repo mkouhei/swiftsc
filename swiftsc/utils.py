@@ -62,7 +62,7 @@ def check_mimetype(filepath):
 
         filename: target filename path
     """
-    if 'open' in dir(magic):
+    if hasattr(magic, 'open'):
         # for python-magic package of Debian Wheezy/Sid, Ubuntu 12.04
         mgc = magic.open(magic.MAGIC_MIME)
         mgc.load()
