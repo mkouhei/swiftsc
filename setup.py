@@ -60,21 +60,7 @@ long_description = (
     open(os.path.join("docs", "HISTORY.rst")).read())
 
 
-def is_debian_system():
-    fnull = open(os.devnull, 'w')
-    if (subprocess.call(['which', 'apt-get'], stdout=fnull) == 0 and
-        subprocess.call(['apt-cache', 'show', 'python-magic'],
-                        stdout=fnull) == 0):
-        fnull.close()
-        return True
-    else:
-        fnull.close()
-        return False
-
-requires = ['setuptools', 'requests']
-if not is_debian_system():
-    requires.append('python-magic')
-
+requires = ['setuptools', 'requests', 'python-magic']
 
 setup(name='swiftsc',
       version='0.5.2',
