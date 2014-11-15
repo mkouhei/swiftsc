@@ -37,7 +37,10 @@ class Tox(TestCommand):
     def run_tests(self):
         import tox
         import shlex
-        errno = tox.cmdline(args=shlex.split(self.tox_args))
+        if self.tox_args:
+            errno = tox.cmdline(args=shlex.split(self.tox_args))
+        else:
+            errno = tox.cmdline(self.test_args)
         sys.exit(errno)
 
 
