@@ -118,13 +118,14 @@ def retrieve_info_from_buffer(file_object):
     return (mimetype, content_length, data)
 
 
-def check_file(file_path):
+def from_file(file_path):
     '''
     Returns: `bool`
 
     :param file_path: :string:`file path`
     '''
-    is_pipe = False
+    is_file = True
     if hasattr(file_path, 'fileno'):
-        is_pipe = True
-    return is_pipe
+        # stdin pipe
+        is_file = False
+    return is_file

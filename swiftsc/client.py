@@ -190,41 +190,47 @@ def create_object(*args, **kwargs):
 
     Return: 201 (Created)
     """
-    token = args[0]
-    storage_url = args[1]
-    container_name = args[2]
     local_file = args[3]
     if kwargs.get('object_name'):
         object_name = kwargs.get('object_name')
     else:
         object_name = None
+
+    if object_name is None:
+        object_name = os.path.basename(local_file)
+
+    url = utils.generate_url([args[1], args[2], object_name])
+
     if kwargs.get('verify'):
         verify = kwargs.get('verify')
     else:
         verify = True
 
-    if utils.check_file(local_file):
-        # from stdin pipe
+    is_file = utils.from_file(local_file)
+    if is_file:
+        # open file
+        content_length = os.path.getsize(local_file)
+        mimetype = utils.check_mimetype(local_file)
+    else:
+        # via stdin pipe
         (mimetype,
          content_length,
          data) = utils.retrieve_info_from_buffer(local_file)
-    else:
-        with open(local_file, 'rb') as _file:
-            data = _file.read()
-        content_length = os.path.getsize(local_file)
-        mimetype = utils.check_mimetype(local_file)
-
-    if object_name is None:
-        object_name = os.path.basename(local_file)
 
     # Failed to upload without "Content-Length" when uploading empty file
-    headers = {'X-Auth-Token': token,
+    headers = {'X-Auth-Token': args[0],
                'Content-Length': str(content_length),
                'content-type': mimetype}
 
-    url = utils.generate_url([storage_url, container_name, object_name])
-    res = requests.put(url, headers=headers, data=data,
-                       timeout=TIMEOUT, verify=verify)
+    if is_file:
+        # open file
+        with open(local_file, 'rb') as _file:
+            res = requests.put(url, headers=headers, data=_file,
+                               timeout=TIMEOUT, verify=verify)
+    else:
+        # stdin pipe
+        res = requests.put(url, headers=headers, data=data,
+                           timeout=TIMEOUT, verify=verify)
     return res.status_code
 
 
