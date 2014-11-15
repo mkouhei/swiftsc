@@ -17,7 +17,7 @@ The main purpose of this tool is used as a core module for backup tool.
 Requirements
 ------------
 
-* Python 2.7 over or Python 3.2 over
+* Python 2.7 over or Python 3.3 over
 * requests 0.12.1 later
 * python-magic 5.x in debian package or python-magic 0.4.3 later of PyPI
 
@@ -57,7 +57,7 @@ Firstly copy pre-commit hook script.::
 Debian systems
 ^^^^^^^^^^^^^^
 
-Next install python2.7, python3.2 later, and python-requests, python-magic, python-tox, pychecker. Below in Debian GNU/Linux Sid system,::
+Next install python2.7, python3.3 later, and python-requests, python-magic, python-tox, pychecker. Below in Debian GNU/Linux Sid system,::
 
    $ sudo apt-get install python python-requests python-pytest pep8 python-magic python-tox pychecker
 

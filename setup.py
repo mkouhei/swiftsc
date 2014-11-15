@@ -70,7 +70,7 @@ long_description = (
 requires = ['setuptools', 'requests', 'python-magic']
 
 setup(name='swiftsc',
-      version='0.5.2',
+      version='0.5.3',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',

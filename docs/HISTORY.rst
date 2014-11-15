@@ -1,6 +1,15 @@
 History
 -------
 
+0.5.3 (2014-11-15)
+^^^^^^^^^^^^^^^^^^
+
+* Unsuppored Python3.2
+* Fixed #12 Read timed out
+* Integrated pylint, pychecker to tox
+* Fixed dependencies
+* Fixed almost violations of pylint
+
 0.5.2 (2014-05-10)
 ^^^^^^^^^^^^^^^^^^
 
