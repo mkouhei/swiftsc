@@ -18,13 +18,17 @@
 
 import os
 import sys
-import subprocess
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
-import multiprocessing
 
 
 class Tox(TestCommand):
+    user_options = [('tox-args=', 'a', 'Arguments to pass to tox')]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.tox_args = None
+
     def finalize_options(self):
         TestCommand.finalize_options(self)
         self.test_args = []
@@ -32,7 +36,11 @@ class Tox(TestCommand):
 
     def run_tests(self):
         import tox
-        errno = tox.cmdline(self.test_args)
+        import shlex
+        if self.tox_args:
+            errno = tox.cmdline(args=shlex.split(self.tox_args))
+        else:
+            errno = tox.cmdline(self.test_args)
         sys.exit(errno)
 
 
@@ -47,7 +55,6 @@ classifiers = [
     "Programming Language :: Python :: 3.3",
     "Programming Language :: Python :: 3.4",
     "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Internet",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -60,24 +67,10 @@ long_description = (
     open(os.path.join("docs", "HISTORY.rst")).read())
 
 
-def is_debian_system():
-    fnull = open(os.devnull, 'w')
-    if (subprocess.call(['which', 'apt-get'], stdout=fnull) == 0 and
-        subprocess.call(['apt-cache', 'show', 'python-magic'],
-                        stdout=fnull) == 0):
-        fnull.close()
-        return True
-    else:
-        fnull.close()
-        return False
-
-requires = ['setuptools', 'requests']
-if not is_debian_system():
-    requires.append('python-magic')
-
+requires = ['setuptools', 'requests', 'python-magic']
 
 setup(name='swiftsc',
-      version='0.5.2',
+      version='0.5.3',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',

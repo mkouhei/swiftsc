@@ -23,37 +23,55 @@ from swiftsc.tests import test_vars as v
 
 
 class UtilsTests(unittest.TestCase):
+    """
+    Unit test of utils.py
+    """
 
     @httprettified
     def test_return_json(self):
+        """
+        test return json
+        """
         HTTPretty.register_uri(HTTPretty.GET,
-                               '%s/%s/' % (v.storage_url,
-                                           v.cntr_name),
-                               body=v.objects_json.encode('utf-8'))
-        res = c.list_objects(v.token, v.storage_url, v.cntr_name)
+                               '%s/%s/' % (v.STORAGE_URL,
+                                           v.CNTR_NAME),
+                               body=v.OBJECTS_JSON.encode('utf-8'))
+        res = c.list_objects(v.TOKEN, v.STORAGE_URL, v.CNTR_NAME)
         self.assertTrue(isinstance(res, list))
 
     def test_generate_uri(self):
-        self.assertEqual(u.generate_url(v.partial_uri_list_2), v.auth_url)
-        self.assertEqual(u.generate_url(v.partial_uri_list_3),
-                         v.auth_ver_url)
+        """
+        test generating uri
+        """
+        self.assertEqual(u.generate_url(v.PARTIAL_URI_LIST_2), v.AUTH_URL)
+        self.assertEqual(u.generate_url(v.PARTIAL_URI_LIST_3),
+                         v.AUTH_VER_URL)
 
     def test_check_mimetype(self):
-        self.assertEqual(v.test_file_mimetype,
-                         u.check_mimetype(v.test_file))
+        """
+        test checking mimetype
+        """
+        self.assertEqual(v.TEST_FILE_MIMETYPE,
+                         u.check_mimetype(v.TEST_FILE))
 
     def test_check_mimetype_buffer(self):
-        fileobj = open(v.test_file, 'rb')
-        self.assertEqual(v.test_file_mimetype,
+        """
+        test checking mimetype of buffer
+        """
+        fileobj = open(v.TEST_FILE, 'rb')
+        self.assertEqual(v.TEST_FILE_MIMETYPE,
                          u.check_mimetype_buffer(fileobj))
         fileobj.close()
 
     def test_retrieve_info_from_buffer(self):
-        fileobj = open(v.test_file, 'rb')
+        """
+        test retriving info from buffer
+        """
+        fileobj = open(v.TEST_FILE, 'rb')
         file_content = fileobj.read()
         fileobj.seek(0)
-        self.assertEqual((v.test_file_mimetype,
-                          v.test_file_size,
+        self.assertEqual((v.TEST_FILE_MIMETYPE,
+                          v.TEST_FILE_SIZE,
                           file_content),
                          u.retrieve_info_from_buffer(fileobj))
         fileobj.close()

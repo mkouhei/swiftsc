@@ -22,6 +22,13 @@ from io import BytesIO
 
 
 def return_json(response_json):
+    """
+    Argument:
+
+        response_json
+
+    Retrun: JSON
+    """
     if isinstance(response_json, dict) or isinstance(response_json, list):
         return response_json
     elif inspect.ismethod(response_json):
@@ -55,11 +62,11 @@ def check_mimetype(filepath):
 
         filename: target filename path
     """
-    if 'open' in dir(magic):
+    if hasattr(magic, 'open'):
         # for python-magic package of Debian Wheezy/Sid, Ubuntu 12.04
-        m = magic.open(magic.MAGIC_MIME)
-        m.load()
-        mimetype = m.file(filepath).split('; ')[0]
+        mgc = magic.open(magic.MAGIC_MIME)
+        mgc.load()
+        mimetype = mgc.file(filepath).split('; ')[0]
     elif 'from_file' in dir(magic):
         # for pip install python-magic
         mimetype = magic.from_file(filepath, mime=True)
@@ -79,9 +86,9 @@ def check_mimetype_buffer(fileobj):
     """
     if 'open' in dir(magic):
         # for python-magic package of Debian Wheezy/Sid, Ubuntu 12.04
-        m = magic.open(magic.MAGIC_MIME)
-        m.load()
-        mimetype = m.buffer(fileobj.read()).split('; ')[0]
+        mgc = magic.open(magic.MAGIC_MIME)
+        mgc.load()
+        mimetype = mgc.buffer(fileobj.read()).split('; ')[0]
     elif 'from_file' in dir(magic):
         # for pip install python-magic
         mimetype = magic.from_buffer(fileobj.read(), mime=True)
@@ -109,3 +116,16 @@ def retrieve_info_from_buffer(file_object):
     data = bio.read()
     bio.close()
     return (mimetype, content_length, data)
+
+
+def from_file(file_path):
+    '''
+    Returns: `bool`
+
+    :param file_path: :string:`file path`
+    '''
+    is_file = True
+    if hasattr(file_path, 'fileno'):
+        # stdin pipe
+        is_file = False
+    return is_file

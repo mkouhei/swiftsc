@@ -18,166 +18,200 @@
 import os.path
 import unittest
 from httpretty import HTTPretty, httprettified
-from swiftsc import client as c
+from swiftsc import client
 from swiftsc.tests import test_vars as v
 
 
 class ClientTests(unittest.TestCase):
+    """Unit test of client module"""
 
     @httprettified
     def test_retrieve_token(self):
-        headers = {'X-Auth-Token': v.token,
-                   'X-Storage-Url': v.storage_url}
+        """Unit test of retrieve_token"""
+        headers = {'X-Auth-Token': v.TOKEN,
+                   'X-Storage-Url': v.STORAGE_URL}
 
         HTTPretty.register_uri(HTTPretty.GET,
-                               v.auth_ver_url,
+                               v.AUTH_VER_URL,
                                adding_headers=headers)
-        self.assertTupleEqual((v.token, v.storage_url),
-                              c.retrieve_token(v.auth_ver_url,
-                                               v.username, v.password))
+        self.assertTupleEqual((v.TOKEN, v.STORAGE_URL),
+                              client.retrieve_token(v.AUTH_VER_URL,
+                                                    v.USERNAME,
+                                                    v.PASSWORD))
 
     @httprettified
     def test_list_containers(self):
+        """Unit test of list_containers"""
         HTTPretty.register_uri(HTTPretty.GET,
-                               v.storage_url,
-                               body=v.containers_json.encode('utf-8'),
+                               v.STORAGE_URL,
+                               body=v.CONTAINERS_JSON.encode('utf-8'),
                                status=200)
-        self.assertListEqual(v.containers,
-                             c.list_containers(v.token, v.storage_url))
+        self.assertListEqual(v.CONTAINERS,
+                             client.list_containers(v.TOKEN,
+                                                    v.STORAGE_URL))
 
     @httprettified
     def test_create_container(self):
+        """Unit test of create_containers"""
         HTTPretty.register_uri(HTTPretty.PUT,
-                               '%s/%s' % (v.storage_url, v.cntr_name),
+                               '%s/%s' % (v.STORAGE_URL, v.CNTR_NAME),
                                status=201)
         self.assertEqual(201,
-                         c.create_container(v.token, v.storage_url,
-                                            v.cntr_name))
+                         client.create_container(v.TOKEN,
+                                                 v.STORAGE_URL,
+                                                 v.CNTR_NAME))
 
     @httprettified
     def test_is_container(self):
+        """Unit test of is_container"""
         HTTPretty.register_uri(HTTPretty.HEAD,
-                               '%s/%s' % (v.storage_url, v.cntr_name),
+                               '%s/%s' % (v.STORAGE_URL, v.CNTR_NAME),
                                status=200)
         self.assertEqual(True,
-                         c.is_container(v.token, v.storage_url,
-                                        v.cntr_name))
+                         client.is_container(v.TOKEN, v.STORAGE_URL,
+                                             v.CNTR_NAME))
 
     @httprettified
     def test_delete_container(self):
+        """Unit test of delete_container"""
         HTTPretty.register_uri(HTTPretty.DELETE,
-                               '%s/%s' % (v.storage_url, v.cntr_name),
+                               '%s/%s' % (v.STORAGE_URL, v.CNTR_NAME),
                                status=204)
         self.assertEqual(204,
-                         c.delete_container(v.token, v.storage_url,
-                                            v.cntr_name))
+                         client.delete_container(v.TOKEN, v.STORAGE_URL,
+                                                 v.CNTR_NAME))
 
     @httprettified
     def test_create_object(self):
-        test_file = v.test_file
-        object_name = os.path.basename(test_file)
+        """Unit test of create_object"""
+        object_name = os.path.basename(v.TEST_FILE)
         HTTPretty.register_uri(HTTPretty.PUT,
-                               '%s/%s/%s' % (v.storage_url,
-                                             v.cntr_name,
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
                                              object_name),
                                status=201)
         self.assertEqual(201,
-                         c.create_object(v.token, v.storage_url, v.cntr_name,
-                                         v.test_file, v.object_name))
+                         client.create_object(v.TOKEN,
+                                              v.STORAGE_URL,
+                                              v.CNTR_NAME,
+                                              v.TEST_FILE,
+                                              object_name=v.OBJECT_NAME))
 
     @httprettified
-    def test_create_object_with_file_object(self):
-        test_file = open(v.test_file, 'rb', buffering=0)
-        object_name = os.path.basename(v.test_file)
+    def test_create_object_with_file(self):
+        """Unit test of create_object with file"""
+        test_file = open(v.TEST_FILE, 'rb', buffering=0)
+        object_name = os.path.basename(v.TEST_FILE)
         files = {'file': (object_name,
                           test_file,
-                          v.test_file_mimetype)}
+                          v.TEST_FILE_MIMETYPE)}
         HTTPretty.register_uri(HTTPretty.PUT,
-                               '%s/%s/%s' % (v.storage_url,
-                                             v.cntr_name,
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
                                              object_name),
                                files=files,
                                status=201)
         self.assertEqual(201,
-                         c.create_object(v.token, v.storage_url, v.cntr_name,
-                                         test_file, v.object_name))
+                         client.create_object(v.TOKEN,
+                                              v.STORAGE_URL,
+                                              v.CNTR_NAME,
+                                              test_file,
+                                              object_name=v.OBJECT_NAME))
         test_file.close()
 
     @httprettified
     def test_list_objects(self):
+        """ Unit test of list_objects """
         HTTPretty.register_uri(HTTPretty.GET,
-                               '%s/%s/' % (v.storage_url,
-                                           v.cntr_name),
-                               body=v.objects_json.encode('utf-8'))
-        self.assertEqual(v.objects,
-                         c.list_objects(v.token, v.storage_url, v.cntr_name))
+                               '%s/%s/' % (v.STORAGE_URL,
+                                           v.CNTR_NAME),
+                               body=v.OBJECTS_JSON.encode('utf-8'))
+        self.assertEqual(v.OBJECTS,
+                         client.list_objects(v.TOKEN,
+                                             v.STORAGE_URL,
+                                             v.CNTR_NAME))
 
     @httprettified
     def test_is_object(self):
-        test_file = v.test_file
-        object_name = os.path.basename(test_file)
+        """ Unit test of is_object """
+        object_name = os.path.basename(v.TEST_FILE)
         HTTPretty.register_uri(HTTPretty.HEAD,
-                               '%s/%s/%s' % (v.storage_url,
-                                             v.cntr_name,
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
                                              object_name))
         self.assertEqual(True,
-                         c.is_object(v.token, v.storage_url,
-                                     v.cntr_name, object_name))
+                         client.is_object(v.TOKEN, v.STORAGE_URL,
+                                          v.CNTR_NAME, object_name))
 
     @httprettified
     def test_retrieve_object(self):
-        object_name = os.path.basename(v.test_file)
-        with open(v.test_file, 'rb') as f:
-            file_content = f.read()
+        """ Unit test of retrieve_object """
+        object_name = os.path.basename(v.TEST_FILE)
+        with open(v.TEST_FILE, 'rb') as _file:
+            file_content = _file.read()
         HTTPretty.register_uri(HTTPretty.GET,
-                               '%s/%s/%s' % (v.storage_url,
-                                             v.cntr_name,
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
                                              object_name),
                                body=file_content)
         self.assertEqual((True, file_content),
-                         c.retrieve_object(v.token, v.storage_url, v.cntr_name,
-                                           v.object_name))
+                         client.retrieve_object(v.TOKEN,
+                                                v.STORAGE_URL,
+                                                v.CNTR_NAME,
+                                                v.OBJECT_NAME))
 
     @httprettified
     def test_retrieve_object_zero(self):
-        object_name = os.path.basename(v.test_zero_file)
-        with open(v.test_zero_file, 'rb') as f:
-            file_content = f.read()
+        """ Unit test of retrieve_object with file size zero """
+        object_name = os.path.basename(v.ZERO_FILE)
+        with open(v.ZERO_FILE, 'rb') as _file:
+            file_content = _file.read()
         HTTPretty.register_uri(HTTPretty.GET,
-                               '%s/%s/%s' % (v.storage_url,
-                                             v.cntr_name,
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
                                              object_name),
                                body=file_content)
         self.assertEqual((True, file_content),
-                         c.retrieve_object(v.token, v.storage_url, v.cntr_name,
-                                           v.object_zero_name))
+                         client.retrieve_object(v.TOKEN,
+                                                v.STORAGE_URL,
+                                                v.CNTR_NAME,
+                                                v.OBJECT_ZERO_NAME))
 
     @httprettified
     def test_copy_object(self):
+        """ Unit test of copy_object """
         HTTPretty.register_uri(HTTPretty.PUT,
-                               '%s/%s/%s' % (v.storage_url,
-                                             v.cntr_name,
-                                             v.dest_obj_name),
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
+                                             v.DEST_OBJ_NAME),
                                status=201)
         self.assertEqual(201,
-                         c.copy_object(v.token, v.storage_url, v.cntr_name,
-                                       v.object_name, v.dest_obj_name))
+                         client.copy_object(v.TOKEN,
+                                            v.STORAGE_URL,
+                                            v.CNTR_NAME,
+                                            v.OBJECT_NAME,
+                                            v.DEST_OBJ_NAME))
 
     @httprettified
     def test_delete_object(self):
+        """ Unit test of delete_object """
         HTTPretty.register_uri(HTTPretty.DELETE,
-                               '%s/%s/%s' % (v.storage_url,
-                                             v.cntr_name,
-                                             v.object_name),
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
+                                             v.OBJECT_NAME),
                                status=204)
         self.assertEqual(204,
-                         c.delete_object(v.token, v.storage_url, v.cntr_name,
-                                         v.object_name))
+                         client.delete_object(v.TOKEN,
+                                              v.STORAGE_URL,
+                                              v.CNTR_NAME,
+                                              v.OBJECT_NAME))
 
     def test_retrieve_public_url_swift(self):
-        self.assertEqual(v.storage_url_ks,
-                         c.retrieve_public_url_swift(v.keystone))
+        """ Unit test of retrieve_public_url_swift """
+        self.assertEqual(v.STORAGE_URL_KS,
+                         client.retrieve_public_url_swift(v.KEYSTONE))
 
     def test_retrieve_token_keystone(self):
-        self.assertEqual(v.token_keystone,
-                         c.retrieve_token_keystone(v.keystone))
+        """ Unit test of retrieve_token_keystone """
+        self.assertEqual(v.TOKEN_KEYSTONE,
+                         client.retrieve_token_keystone(v.KEYSTONE))

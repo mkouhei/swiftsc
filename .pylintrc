@@ -1,0 +1,5 @@
+[MESSAGES CONTROL]
+disable=
+        too-many-public-methods,
+        no-self-use,
+        no-member
