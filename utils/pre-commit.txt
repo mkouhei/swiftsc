@@ -1,6 +1,4 @@
 #!/bin/sh -e
-
-which py.test || exit 1
 (
 cd $(git rev-parse --show-toplevel)
 find swiftsc -name '*.pyc' -delete
