@@ -21,11 +21,13 @@ import json
 from swiftsc import utils
 
 
+#: connection timeout
+#: see also http://goo.gl/6KIJnc
 TIMEOUT = 5.000
 
 
 def retrieve_token(auth_url, username, password,
-                   tenant_name=None, verify=True):
+                   tenant_name=None, timeout=TIMEOUT, verify=True):
     """
 
     Arguments:
@@ -49,7 +51,7 @@ def retrieve_token(auth_url, username, password,
         res = requests.post(auth_url,
                             headers=headers,
                             data=json.dumps(payload),
-                            timeout=TIMEOUT,
+                            timeout=timeout,
                             verify=verify)
         res_d = utils.return_json(res.json)
         token = retrieve_token_keystone(res_d)
@@ -58,7 +60,7 @@ def retrieve_token(auth_url, username, password,
         # using tempauth of Swift
         headers = {'X-Storage-User': username, 'X-Storage-Pass': password}
         res = requests.get(auth_url, headers=headers,
-                           timeout=TIMEOUT, verify=verify)
+                           timeout=timeout, verify=verify)
         token = res.headers.get('X-Auth-Token')
         storage_url = res.headers.get('X-Storage-Url')
     return token, storage_url
@@ -101,7 +103,7 @@ def retrieve_token_keystone(r_json):
     return r_json.get('access').get('token').get('id')
 
 
-def list_containers(token, storage_url, verify=True):
+def list_containers(token, storage_url, timeout=TIMEOUT, verify=True):
     """
 
     Arguments:
@@ -113,7 +115,7 @@ def list_containers(token, storage_url, verify=True):
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
     res = requests.get(storage_url, headers=headers,
-                       params=payload, timeout=TIMEOUT, verify=verify)
+                       params=payload, timeout=timeout, verify=verify)
     # not use res.content that is data type is "str".
     # You must encode to unicode and utf-8 by yourself
     # if you use multibyte character.
@@ -121,7 +123,8 @@ def list_containers(token, storage_url, verify=True):
     return utils.return_json(res.json)
 
 
-def create_container(token, storage_url, container_name, verify=True):
+def create_container(token, storage_url, container_name,
+                     timeout=TIMEOUT, verify=True):
     """
 
     Arguments:
@@ -135,11 +138,12 @@ def create_container(token, storage_url, container_name, verify=True):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    res = requests.put(url, headers=headers, timeout=TIMEOUT, verify=verify)
+    res = requests.put(url, headers=headers, timeout=timeout, verify=verify)
     return res.status_code
 
 
-def is_container(token, storage_url, container_name, verify=True):
+def is_container(token, storage_url, container_name,
+                 timeout=TIMEOUT, verify=True):
     """
 
     Arguments:
@@ -153,11 +157,12 @@ def is_container(token, storage_url, container_name, verify=True):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    res = requests.head(url, headers=headers, timeout=TIMEOUT, verify=verify)
+    res = requests.head(url, headers=headers, timeout=timeout, verify=verify)
     return res.ok
 
 
-def delete_container(token, storage_url, container_name, verify=True):
+def delete_container(token, storage_url, container_name,
+                     timeout=TIMEOUT, verify=True):
     """
     Arguments:
 
@@ -170,7 +175,7 @@ def delete_container(token, storage_url, container_name, verify=True):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name])
-    res = requests.delete(url, headers=headers, timeout=TIMEOUT, verify=verify)
+    res = requests.delete(url, headers=headers, timeout=timeout, verify=verify)
     return res.status_code
 
 
@@ -206,6 +211,11 @@ def create_object(*args, **kwargs):
     else:
         verify = True
 
+    if kwargs.get('timeout'):
+        timeout = kwargs.get('timeout')
+    else:
+        timeout = TIMEOUT
+
     is_file = utils.from_file(local_file)
     if is_file:
         # open file
@@ -226,15 +236,16 @@ def create_object(*args, **kwargs):
         # open file
         with open(local_file, 'rb') as _file:
             res = requests.put(url, headers=headers, data=_file,
-                               timeout=TIMEOUT, verify=verify)
+                               timeout=timeout, verify=verify)
     else:
         # stdin pipe
         res = requests.put(url, headers=headers, data=data,
-                           timeout=TIMEOUT, verify=verify)
+                           timeout=timeout, verify=verify)
     return res.status_code
 
 
-def list_objects(token, storage_url, container_name, verify=True):
+def list_objects(token, storage_url, container_name,
+                 timeout=TIMEOUT, verify=True):
     """
     Arguments:
 
@@ -247,12 +258,13 @@ def list_objects(token, storage_url, container_name, verify=True):
     payload = {'format': 'json'}
     url = utils.generate_url([storage_url, container_name]) + '/'
     res = requests.get(url, headers=headers, params=payload,
-                       timeout=TIMEOUT, verify=verify)
+                       timeout=timeout, verify=verify)
     res.encoding = 'utf-8'
     return utils.return_json(res.json)
 
 
-def is_object(token, storage_url, container_name, object_name, verify=True):
+def is_object(token, storage_url, container_name, object_name,
+              timeout=TIMEOUT, verify=True):
     """
     Arguments:
 
@@ -266,12 +278,12 @@ def is_object(token, storage_url, container_name, object_name, verify=True):
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
-    res = requests.head(url, headers=headers, timeout=TIMEOUT, verify=verify)
+    res = requests.head(url, headers=headers, timeout=timeout, verify=verify)
     return res.ok
 
 
 def retrieve_object(token, storage_url, container_name,
-                    object_name, verify=True):
+                    object_name, timeout=TIMEOUT, verify=True):
     """
     Arguments:
 
@@ -285,7 +297,7 @@ def retrieve_object(token, storage_url, container_name,
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
-    res = requests.get(url, headers=headers, timeout=TIMEOUT, verify=verify)
+    res = requests.get(url, headers=headers, timeout=timeout, verify=verify)
     return res.ok, res.content
 
 
@@ -311,6 +323,11 @@ def copy_object(*args, **kwargs):
         verify = kwargs.get('verify')
     else:
         verify = True
+
+    if kwargs.get('timeout'):
+        timeout = kwargs.get('timeout')
+    else:
+        timeout = TIMEOUT
     src_url = '/' + utils.generate_url([container_name, src_object_name])
     headers = {'X-Auth-Token': token,
                'Content-Length': "0",
@@ -319,12 +336,12 @@ def copy_object(*args, **kwargs):
     dest_url = utils.generate_url([storage_url, container_name,
                                    dest_object_name])
     res = requests.put(dest_url, headers=headers,
-                       timeout=TIMEOUT, verify=verify)
+                       timeout=timeout, verify=verify)
     return res.status_code
 
 
 def delete_object(token, storage_url, container_name,
-                  object_name, verify=True):
+                  object_name, timeout=TIMEOUT, verify=True):
     """
     Arguments:
 
@@ -338,5 +355,5 @@ def delete_object(token, storage_url, container_name,
     """
     headers = {'X-Auth-Token': token}
     url = utils.generate_url([storage_url, container_name, object_name])
-    res = requests.delete(url, headers=headers, timeout=TIMEOUT, verify=verify)
+    res = requests.delete(url, headers=headers, timeout=timeout, verify=verify)
     return res.status_code
