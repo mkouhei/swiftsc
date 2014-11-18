@@ -1,6 +1,11 @@
 History
 -------
 
+0.5.5 (2014-11-19)
+^^^^^^^^^^^^^^^^^^
+
+* Appended argument timeout to change value
+
 
 0.5.4 (2014-11-16)
 ^^^^^^^^^^^^^^^^^^
