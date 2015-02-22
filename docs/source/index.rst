@@ -18,7 +18,6 @@ Contents:
    :maxdepth: 1
 
    HISTORY
-   TODO
 
 Indices and tables
 ==================
