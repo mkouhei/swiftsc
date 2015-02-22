@@ -16,24 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import magic
-import inspect
 import sys
 from io import BytesIO
-
-
-def return_json(response_json):
-    """
-    Argument:
-
-        response_json
-
-    Retrun: JSON
-    """
-    if isinstance(response_json, dict) or isinstance(response_json, list):
-        return response_json
-    elif inspect.ismethod(response_json):
-        # support requests 1.0 over
-        return response_json()
 
 
 def generate_url(partial_uri_list):

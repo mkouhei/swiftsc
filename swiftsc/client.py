@@ -53,7 +53,7 @@ def retrieve_token(auth_url, username, password,
                             data=json.dumps(payload),
                             timeout=timeout,
                             verify=verify)
-        res_d = utils.return_json(res.json)
+        res_d = res.json()
         token = retrieve_token_keystone(res_d)
         storage_url = retrieve_public_url_swift(res_d)
     else:
@@ -120,7 +120,7 @@ def list_containers(token, storage_url, timeout=TIMEOUT, verify=True):
     # You must encode to unicode and utf-8 by yourself
     # if you use multibyte character.
     res.encoding = 'utf-8'
-    return utils.return_json(res.json)
+    return res.json()
 
 
 def create_container(token, storage_url, container_name,
@@ -260,7 +260,7 @@ def list_objects(token, storage_url, container_name,
     res = requests.get(url, headers=headers, params=payload,
                        timeout=timeout, verify=verify)
     res.encoding = 'utf-8'
-    return utils.return_json(res.json)
+    return res.json()
 
 
 def is_object(token, storage_url, container_name, object_name,
