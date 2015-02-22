@@ -21,14 +21,12 @@ from io import BytesIO
 
 
 def generate_url(partial_uri_list):
-    """
-    Argument:
+    """Generate url
 
-        partial_uri_list: patial string of generating URL
-                          ex. ["https://swift.example.org", "auth", "v1.0"]
+    :rtype: str
+    :return: auth url (ex. "https://swift.example.org/auth/v1.0")
 
-    Return: URL
-            ex. "https://swift.example.org/auth/v1.0"
+    :param list partial_uri_list: patial string of generating URL
     """
     url = ""
     for i, partial_uri in enumerate(partial_uri_list):
@@ -40,11 +38,12 @@ def generate_url(partial_uri_list):
 
 
 def check_mimetype(filepath):
-    """check mimetype of file
+    """Check mimetype of file
 
-    Argument:
+    :rtype: str
+    :return: mimetype
 
-        filename: target filename path
+    :param str filepath: target filename path
     """
     if hasattr(magic, 'open'):
         # for python-magic package of Debian Wheezy/Sid, Ubuntu 12.04
@@ -62,11 +61,12 @@ def check_mimetype(filepath):
 
 
 def check_mimetype_buffer(fileobj):
-    """check mimetype of file
+    """Check mimetype of file
 
-    Argument:
+    :rtype: str
+    :return: mimetype
 
-        filename: target filename path
+    :param fileobj: target filename path
     """
     if 'open' in dir(magic):
         # for python-magic package of Debian Wheezy/Sid, Ubuntu 12.04
@@ -84,11 +84,12 @@ def check_mimetype_buffer(fileobj):
 
 
 def retrieve_info_from_buffer(file_object):
-    """check mimetype of file object
+    """Check mimetype of file object
 
-    Argument:
+    :rtype: tuple
+    :return: mimetype, content length, data
 
-        file_object: target file object
+    :param file_object: target file object
     """
     bio = BytesIO()
     bio.write(file_object.read())
@@ -103,10 +104,12 @@ def retrieve_info_from_buffer(file_object):
 
 
 def from_file(file_path):
-    '''
-    Returns: `bool`
+    '''Check file
 
-    :param file_path: :string:`file path`
+    :rtype: bool
+    :return: True is file object
+
+    :param str file_path: file path
     '''
     is_file = True
     if hasattr(file_path, 'fileno'):
