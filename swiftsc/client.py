@@ -34,7 +34,7 @@ def retrieve_token(auth_url, username, password,
     """
     if tenant_name:
         # using OpenStack KeyStone
-        payload = set_auth_info(username, password, tenant_name)
+        payload = _set_auth_info(username, password, tenant_name)
         headers = {'Content-Type': 'application/json'}
         res = requests.post(auth_url,
                             headers=headers,
@@ -42,8 +42,8 @@ def retrieve_token(auth_url, username, password,
                             timeout=timeout,
                             verify=verify)
         res_d = res.json()
-        token = retrieve_token_keystone(res_d)
-        storage_url = retrieve_public_url_swift(res_d)
+        token = _retrieve_token_keystone(res_d)
+        storage_url = _retrieve_public_url_swift(res_d)
     else:
         # using tempauth of Swift
         headers = {'X-Storage-User': username, 'X-Storage-Pass': password}
@@ -54,7 +54,7 @@ def retrieve_token(auth_url, username, password,
     return token, storage_url
 
 
-def set_auth_info(username, password, tenant_name):
+def _set_auth_info(username, password, tenant_name):
     """Generate auth parameters for KeyStone auth
 
     :rtype: dict
@@ -73,7 +73,7 @@ def set_auth_info(username, password, tenant_name):
     return payload
 
 
-def retrieve_public_url_swift(r_json):
+def _retrieve_public_url_swift(r_json):
     """Retrieve Swift public url from KeyStone
 
     :rtype: string
@@ -87,7 +87,7 @@ def retrieve_public_url_swift(r_json):
     return endpoints.get('publicURL')
 
 
-def retrieve_token_keystone(r_json):
+def _retrieve_token_keystone(r_json):
     """Retrieve token of KeyStone Auth
 
     :rtype: str

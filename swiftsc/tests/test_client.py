@@ -40,6 +40,18 @@ class ClientTests(unittest.TestCase):
                                                     v.PASSWORD))
 
     @httprettified
+    def test_retrieve_token_keystone(self):
+        """Unit test of retrieve_token"""
+        HTTPretty.register_uri(HTTPretty.POST,
+                               v.KEYSTONE_URL,
+                               body=json.dumps(v.KEYSTONE))
+        self.assertTupleEqual((v.KEYSTONE_TOKEN, v.STORAGE_URL_KS),
+                              client.retrieve_token(v.KEYSTONE_URL,
+                                                    v.USERNAME,
+                                                    v.PASSWORD,
+                                                    tenant_name=v.TENANT_NAME))
+
+    @httprettified
     def test_list_containers(self):
         """Unit test of list_containers"""
         HTTPretty.register_uri(HTTPretty.GET,
@@ -205,13 +217,3 @@ class ClientTests(unittest.TestCase):
                                               v.STORAGE_URL,
                                               v.CNTR_NAME,
                                               v.OBJECT_NAME))
-
-    def test_retrieve_public_url_swift(self):
-        """ Unit test of retrieve_public_url_swift """
-        self.assertEqual(v.STORAGE_URL_KS,
-                         client.retrieve_public_url_swift(v.KEYSTONE))
-
-    def test_retrieve_token_keystone(self):
-        """ Unit test of retrieve_token_keystone """
-        self.assertEqual(v.TOKEN_KEYSTONE,
-                         client.retrieve_token_keystone(v.KEYSTONE))
