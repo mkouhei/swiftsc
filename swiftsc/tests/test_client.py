@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import os.path
+import json
 import unittest
 from httpretty import HTTPretty, httprettified
 from swiftsc import client
