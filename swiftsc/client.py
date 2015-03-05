@@ -459,18 +459,9 @@ def _set_auth_info(username, password, tenant_name):
     return payload
 
 
-def _retrieve_public_url_swift(r_json):
-    """Retrieve Swift public url from KeyStone
 
-    :rtype: string
-    :return: swift public url
 
-    :param dict r_json: response payload from KeyStone auth
     """
-    endpoints = [ep.get('endpoints')[0]
-                 for ep in r_json.get('access').get('serviceCatalog')
-                 if ep.get('name') == 'swift'][0]
-    return endpoints.get('publicURL')
 
 
 def _retrieve_token_keystone(r_json):
