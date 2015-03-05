@@ -459,9 +459,24 @@ def _set_auth_info(username, password, tenant_name):
     return payload
 
 
+def _generate_url(partial_uri_list):
+    """Generate url
 
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
 
+    :rtype: str
+    :return: auth url (ex. "https://swift.example.org/auth/v1.0")
+
+    :param list partial_uri_list: patial string of generating URL
     """
+    url = ""
+    for i, partial_uri in enumerate(partial_uri_list):
+        if i + 1 == len(partial_uri_list):
+            url += partial_uri
+        else:
+            url += partial_uri + "/"
+    return url
 
 
 def _retrieve_token_keystone(r_json):
@@ -511,7 +526,7 @@ def create_container(token, storage_url, container_name,
     :param bool verify: True is check a host’s SSL certificate
     """
     headers = {'X-Auth-Token': token}
-    url = utils.generate_url([storage_url, container_name])
+    url = _generate_url([storage_url, container_name])
     res = requests.put(url, headers=headers, timeout=timeout, verify=verify)
     return res.status_code
 
@@ -530,7 +545,7 @@ def is_container(token, storage_url, container_name,
     :param bool verify: True is check a host’s SSL certificate
     """
     headers = {'X-Auth-Token': token}
-    url = utils.generate_url([storage_url, container_name])
+    url = _generate_url([storage_url, container_name])
     res = requests.head(url, headers=headers, timeout=timeout, verify=verify)
     return res.ok
 
@@ -549,7 +564,7 @@ def delete_container(token, storage_url, container_name,
     :param bool verify: True is check a host’s SSL certificate
     """
     headers = {'X-Auth-Token': token}
-    url = utils.generate_url([storage_url, container_name])
+    url = _generate_url([storage_url, container_name])
     res = requests.delete(url, headers=headers, timeout=timeout, verify=verify)
     return res.status_code
 
@@ -573,7 +588,7 @@ def create_object(*args, **kwargs):
     if object_name is None:
         object_name = os.path.basename(local_file)
 
-    url = utils.generate_url([args[1], args[2], object_name])
+    url = _generate_url([args[1], args[2], object_name])
 
     if kwargs.get('verify'):
         verify = kwargs.get('verify')
@@ -628,7 +643,7 @@ def list_objects(token, storage_url, container_name,
     """
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
-    url = utils.generate_url([storage_url, container_name]) + '/'
+    url = _generate_url([storage_url, container_name]) + '/'
     res = requests.get(url, headers=headers, params=payload,
                        timeout=timeout, verify=verify)
     res.encoding = 'utf-8'
@@ -649,7 +664,7 @@ def is_object(token, storage_url, container_name, object_name,
     :param bool verify: True is check a host’s SSL certificate
     """
     headers = {'X-Auth-Token': token}
-    url = utils.generate_url([storage_url, container_name, object_name])
+    url = _generate_url([storage_url, container_name, object_name])
     res = requests.head(url, headers=headers, timeout=timeout, verify=verify)
     return res.ok
 
@@ -669,7 +684,7 @@ def retrieve_object(token, storage_url, container_name,
     :param bool verify: True is check a host’s SSL certificate
     """
     headers = {'X-Auth-Token': token}
-    url = utils.generate_url([storage_url, container_name, object_name])
+    url = _generate_url([storage_url, container_name, object_name])
     res = requests.get(url, headers=headers, timeout=timeout, verify=verify)
     return res.ok, res.content
 
@@ -702,13 +717,13 @@ def copy_object(*args, **kwargs):
         timeout = kwargs.get('timeout')
     else:
         timeout = TIMEOUT
-    src_url = '/' + utils.generate_url([container_name, src_object_name])
+    src_url = '/' + _generate_url([container_name, src_object_name])
     headers = {'X-Auth-Token': token,
                'Content-Length': "0",
                'X-Copy-From': src_url}
 
-    dest_url = utils.generate_url([storage_url, container_name,
-                                   dest_object_name])
+    dest_url = _generate_url([storage_url, container_name,
+                              dest_object_name])
     res = requests.put(dest_url, headers=headers,
                        timeout=timeout, verify=verify)
     return res.status_code
@@ -729,6 +744,6 @@ def delete_object(token, storage_url, container_name,
     :param bool verify: True is check a host’s SSL certificate
     """
     headers = {'X-Auth-Token': token}
-    url = utils.generate_url([storage_url, container_name, object_name])
+    url = _generate_url([storage_url, container_name, object_name])
     res = requests.delete(url, headers=headers, timeout=timeout, verify=verify)
     return res.status_code

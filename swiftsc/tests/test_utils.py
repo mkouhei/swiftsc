@@ -39,14 +39,6 @@ class UtilsTests(unittest.TestCase):
         res = c.list_objects(v.TOKEN, v.STORAGE_URL, v.CNTR_NAME)
         self.assertTrue(isinstance(res, list))
 
-    def test_generate_uri(self):
-        """
-        test generating uri
-        """
-        self.assertEqual(u.generate_url(v.PARTIAL_URI_LIST_2), v.AUTH_URL)
-        self.assertEqual(u.generate_url(v.PARTIAL_URI_LIST_3),
-                         v.AUTH_VER_URL)
-
     def test_check_mimetype(self):
         """
         test checking mimetype

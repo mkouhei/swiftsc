@@ -5,23 +5,6 @@ import sys
 from io import BytesIO
 
 
-def generate_url(partial_uri_list):
-    """Generate url
-
-    :rtype: str
-    :return: auth url (ex. "https://swift.example.org/auth/v1.0")
-
-    :param list partial_uri_list: patial string of generating URL
-    """
-    url = ""
-    for i, partial_uri in enumerate(partial_uri_list):
-        if i + 1 == len(partial_uri_list):
-            url += partial_uri
-        else:
-            url += partial_uri + "/"
-    return url
-
-
 def check_mimetype(filepath):
     """Check mimetype of file
 
