@@ -1,6 +1,12 @@
 History
 -------
 
+0.6.0 (2015-03-06)
+^^^^^^^^^^^^^^^^^^
+
+* Added new client API
+* Added Sphinx documentation
+
 0.5.5 (2014-11-19)
 ^^^^^^^^^^^^^^^^^^
 
