@@ -74,6 +74,9 @@ def retrieve_info_from_buffer(file_object):
 def from_file(file_path):
     '''Check file
 
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
+
     :rtype: bool
     :return: True is file object
 
