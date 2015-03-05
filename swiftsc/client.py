@@ -401,10 +401,13 @@ def retrieve_token(auth_uri, username, password,
                    tenant_name=None, timeout=TIMEOUT, verify=True):
     """Retrieve token
 
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
+
     :rtype: tuple
     :return: Auth token, storage url
 
-    :param str auth_url: Swift API of authentication
+    :param str auth_uri: Swift API of authentication
 
         https://<Host>/auth/<api_version>
         ex. https://swift.example.org/auth/v1.0
@@ -442,6 +445,9 @@ def retrieve_token(auth_uri, username, password,
 
 def _set_auth_info(username, password, tenant_name):
     """Generate auth parameters for KeyStone auth
+
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
 
     :rtype: dict
     :return: auth parameters for KeyStone auth
@@ -482,6 +488,9 @@ def _generate_url(partial_uri_list):
 def _retrieve_token_keystone(r_json):
     """Retrieve token of KeyStone Auth
 
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
+
     :rtype: str
     :return: Auth token
 
@@ -492,6 +501,9 @@ def _retrieve_token_keystone(r_json):
 
 def list_containers(token, storage_url, timeout=TIMEOUT, verify=True):
     """List containers
+
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
 
     :rtype: list
     :return: containers list
@@ -516,6 +528,9 @@ def create_container(token, storage_url, container_name,
                      timeout=TIMEOUT, verify=True):
     """Create container
 
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
+
     :rtype: int
     :return: status code; 201(Created)
 
@@ -534,6 +549,9 @@ def create_container(token, storage_url, container_name,
 def is_container(token, storage_url, container_name,
                  timeout=TIMEOUT, verify=True):
     """Check container
+
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
 
     :rtype: bool
     :return: True is contianer
@@ -554,6 +572,9 @@ def delete_container(token, storage_url, container_name,
                      timeout=TIMEOUT, verify=True):
     """Delete container
 
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
+
     :rtype: int
     :return: status code; 204(No Content)
 
@@ -571,6 +592,9 @@ def delete_container(token, storage_url, container_name,
 
 def create_object(*args, **kwargs):
     """Create object
+
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
 
     :rtype: int
     :return: status code; 201 (Created)
@@ -628,6 +652,9 @@ def list_objects(token, storage_url, container_name,
                  timeout=TIMEOUT, verify=True):
     """List objects
 
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
+
     :rtype: list
     :return: object list
 
@@ -650,6 +677,9 @@ def is_object(token, storage_url, container_name, object_name,
               timeout=TIMEOUT, verify=True):
     """Check object
 
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
+
     :rtype: bool
     :return: True is object
 
@@ -669,6 +699,9 @@ def retrieve_object(token, storage_url, container_name,
                     object_name, timeout=TIMEOUT, verify=True):
     """Retrieve object
 
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
+
     :rtype: tuple
     :return: `Response`.ok, `Response`.content
 
@@ -687,6 +720,9 @@ def retrieve_object(token, storage_url, container_name,
 
 def copy_object(*args, **kwargs):
     """Copy object
+
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
 
     :rtype: int
     :return: status code; 201(Created)
@@ -728,6 +764,9 @@ def copy_object(*args, **kwargs):
 def delete_object(token, storage_url, container_name,
                   object_name, timeout=TIMEOUT, verify=True):
     """Delete object
+
+    .. warning::
+        This method is deprecated, will be removed in version 0.7.0.
 
     :rtype: int
     :return: status code; 204(No Content)
