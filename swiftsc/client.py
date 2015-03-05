@@ -422,7 +422,7 @@ def retrieve_token(auth_uri, username, password,
         # using OpenStack KeyStone
         payload = _set_auth_info(username, password, tenant_name)
         headers = {'Content-Type': 'application/json'}
-        res = requests.post(auth_url,
+        res = requests.post(auth_uri,
                             headers=headers,
                             data=json.dumps(payload),
                             timeout=timeout,
@@ -433,7 +433,7 @@ def retrieve_token(auth_uri, username, password,
     else:
         # using tempauth of Swift
         headers = {'X-Storage-User': username, 'X-Storage-Pass': password}
-        res = requests.get(auth_url, headers=headers,
+        res = requests.get(auth_uri, headers=headers,
                            timeout=timeout, verify=verify)
         token = res.headers.get('X-Auth-Token')
         storage_url = res.headers.get('X-Storage-Url')
