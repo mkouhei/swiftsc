@@ -580,11 +580,7 @@ def create_object(*args, **kwargs):
         local_file, object_name, timeout, verify
     """
     local_file = args[3]
-    if kwargs.get('object_name'):
-        object_name = kwargs.get('object_name')
-    else:
-        object_name = None
-
+    object_name = kwargs.get('object_name')
     if object_name is None:
         object_name = os.path.basename(local_file)
 
