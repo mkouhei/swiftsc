@@ -7,8 +7,8 @@
 
 .. automodule:: swiftsc.client
    :members:
-   :undoc-members:
+   :show-inheritance:
 
 .. automodule:: swiftsc.utils
    :members:
-   :undoc-members:
+   :show-inheritance:
