@@ -9,6 +9,7 @@ PARTIAL_URI_LIST_2 = ["https://example.org", "auth"]
 PARTIAL_URI_LIST_3 = ["https://example.org", "auth", "v1.0"]
 AUTH_URL = "https://example.org/auth"
 AUTH_VER_URL = "https://example.org/auth/v1.0"
+KEYSTONE_URL = 'https://keystone.example.org/v2.0/tokens'
 TOKEN = 'AUTH_tk55ed712a114a467ca10e3841bb98accf'
 STORAGE_URL = ('https://example.org/v1/'
                'AUTH_c1d6a4bc-892d-4106-9c62-36a48ea0f129')
@@ -112,3 +113,5 @@ KEYSTONE = {
 TOKEN_KEYSTONE = '4bbf2976ab9d4703b85207054dbdb701'
 STORAGE_URL_KS = ('http://example.org:8080/v1/'
                   'AUTH_c6f41799c8e44974bf6b2f3af9495dc0')
+TENANT_NAME = 'guest'
+KEYSTONE_TOKEN = '4bbf2976ab9d4703b85207054dbdb701'

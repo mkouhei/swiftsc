@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    Copyright (C) 2013, 2014 Kouhei Maeda <mkouhei@palmtb.net>
+    Copyright (C) 2013-2015 Kouhei Maeda <mkouhei@palmtb.net>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,13 +16,152 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import os.path
+import json
 import unittest
 from httpretty import HTTPretty, httprettified
 from swiftsc import client
+from swiftsc.client import Client
 from swiftsc.tests import test_vars as v
 
 
 class ClientTests(unittest.TestCase):
+    """ Unit test of client.Client """
+
+    @httprettified
+    def setUp(self):
+        headers = {'X-Auth-Token': v.TOKEN,
+                   'X-Storage-Url': v.STORAGE_URL}
+        HTTPretty.register_uri(HTTPretty.GET,
+                               v.AUTH_URL,
+                               adding_headers=headers)
+
+        self.tclient = Client(auth_uri=v.AUTH_URL,
+                              username=v.USERNAME,
+                              password=v.PASSWORD)
+
+    @httprettified
+    def test_list_containers(self):
+        """ unit test of list containers """
+        HTTPretty.register_uri(HTTPretty.GET,
+                               v.STORAGE_URL,
+                               body=v.CONTAINERS_JSON.encode('utf-8'),
+                               status=200)
+        self.assertEqual(200,
+                         self.tclient.containers.list().status_code)
+        self.assertListEqual(v.CONTAINERS,
+                             self.tclient.containers.list().json())
+
+    @httprettified
+    def test_create_container(self):
+        """ unit test of create container """
+        HTTPretty.register_uri(HTTPretty.PUT,
+                               '%s/%s' % (v.STORAGE_URL,
+                                          v.CNTR_NAME),
+                               status=201)
+        res = self.tclient.containers.create(name=v.CNTR_NAME)
+        self.assertEqual(201, res.status_code)
+        # self.assertListEqual(v.CONTAINERS, res.json())
+
+    @httprettified
+    def test_show_metadata_container(self):
+        """ unit test of show metadata of container """
+        HTTPretty.register_uri(HTTPretty.HEAD,
+                               '%s/%s' % (v.STORAGE_URL, v.CNTR_NAME),
+                               status=200)
+        self.assertEqual(200,
+                         self.tclient.containers.show_metadata(
+                             v.CNTR_NAME).status_code)
+
+    @httprettified
+    def test_delete_container(self):
+        """ unit test of delete container """
+        HTTPretty.register_uri(HTTPretty.DELETE,
+                               '%s/%s' % (v.STORAGE_URL, v.CNTR_NAME),
+                               status=204)
+        self.assertEqual(204,
+                         self.tclient.containers.delete(
+                             v.CNTR_NAME).status_code)
+
+    @httprettified
+    def test_create_object(self):
+        """ unit test of create object """
+        object_name = os.path.basename(v.TEST_FILE)
+        HTTPretty.register_uri(HTTPretty.PUT,
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
+                                             object_name),
+                               status=201)
+        self.tclient.containers.container(v.CNTR_NAME)
+        res = self.tclient.containers.objects.create(name=object_name,
+                                                     file_path=v.TEST_FILE)
+        self.assertEqual(201, res.status_code)
+
+    @httprettified
+    def test_list_objects(self):
+        """ Unit test of list_objects """
+        HTTPretty.register_uri(HTTPretty.GET,
+                               '%s/%s' % (v.STORAGE_URL, v.CNTR_NAME),
+                               body=v.OBJECTS_JSON.encode('utf-8'))
+        self.tclient.containers.container(v.CNTR_NAME)
+        self.assertEqual(200,
+                         self.tclient.containers.objects.list().status_code)
+
+    @httprettified
+    def test_show_metadata_object(self):
+        """ Unit test show metadata of object """
+        object_name = os.path.basename(v.TEST_FILE)
+        HTTPretty.register_uri(HTTPretty.HEAD,
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
+                                             object_name))
+        self.tclient.containers.container(v.CNTR_NAME)
+        self.assertEqual(200,
+                         self.tclient.containers.objects.show_metadata(
+                             object_name).status_code)
+
+    @httprettified
+    def test_detail_object(self):
+        """ unit test detail object """
+        object_name = os.path.basename(v.TEST_FILE)
+        with open(v.TEST_FILE, 'rb') as fobj:
+            body = fobj.read()
+        HTTPretty.register_uri(HTTPretty.GET,
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
+                                             object_name),
+                               body=body)
+        self.tclient.containers.container(v.CNTR_NAME)
+        res = self.tclient.containers.objects.detail(object_name)
+        self.assertEqual(200, res.status_code)
+        self.assertEqual(body, res.content)
+
+    @httprettified
+    def test_copy_object(self):
+        """ unit test copy object """
+        HTTPretty.register_uri(HTTPretty.PUT,
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
+                                             v.DEST_OBJ_NAME),
+                               status=201)
+        self.tclient.containers.container(v.CNTR_NAME)
+        res = self.tclient.containers.objects.copy(v.OBJECT_NAME,
+                                                   v.DEST_OBJ_NAME)
+        self.assertEqual(201, res.status_code)
+
+    @httprettified
+    def test_delete_object(self):
+        """ unit test delete object """
+        HTTPretty.register_uri(HTTPretty.DELETE,
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
+                                             v.OBJECT_NAME),
+                               status=204)
+        self.tclient.containers.container(v.CNTR_NAME)
+        res = self.tclient.containers.objects.delete(v.OBJECT_NAME)
+        self.assertEqual(204, res.status_code)
+
+
+class OldClientTests(unittest.TestCase):
     """Unit test of client module"""
 
     @httprettified
@@ -38,6 +177,18 @@ class ClientTests(unittest.TestCase):
                               client.retrieve_token(v.AUTH_VER_URL,
                                                     v.USERNAME,
                                                     v.PASSWORD))
+
+    @httprettified
+    def test_retrieve_token_keystone(self):
+        """Unit test of retrieve_token"""
+        HTTPretty.register_uri(HTTPretty.POST,
+                               v.KEYSTONE_URL,
+                               body=json.dumps(v.KEYSTONE))
+        self.assertTupleEqual((v.KEYSTONE_TOKEN, v.STORAGE_URL_KS),
+                              client.retrieve_token(v.KEYSTONE_URL,
+                                                    v.USERNAME,
+                                                    v.PASSWORD,
+                                                    tenant_name=v.TENANT_NAME))
 
     @httprettified
     def test_list_containers(self):
@@ -205,13 +356,3 @@ class ClientTests(unittest.TestCase):
                                               v.STORAGE_URL,
                                               v.CNTR_NAME,
                                               v.OBJECT_NAME))
-
-    def test_retrieve_public_url_swift(self):
-        """ Unit test of retrieve_public_url_swift """
-        self.assertEqual(v.STORAGE_URL_KS,
-                         client.retrieve_public_url_swift(v.KEYSTONE))
-
-    def test_retrieve_token_keystone(self):
-        """ Unit test of retrieve_token_keystone """
-        self.assertEqual(v.TOKEN_KEYSTONE,
-                         client.retrieve_token_keystone(v.KEYSTONE))

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    Copyright (C) 2013 Kouhei Maeda <mkouhei@palmtb.net>
+    Copyright (C) 2013-2015 Kouhei Maeda <mkouhei@palmtb.net>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,14 +38,6 @@ class UtilsTests(unittest.TestCase):
                                body=v.OBJECTS_JSON.encode('utf-8'))
         res = c.list_objects(v.TOKEN, v.STORAGE_URL, v.CNTR_NAME)
         self.assertTrue(isinstance(res, list))
-
-    def test_generate_uri(self):
-        """
-        test generating uri
-        """
-        self.assertEqual(u.generate_url(v.PARTIAL_URI_LIST_2), v.AUTH_URL)
-        self.assertEqual(u.generate_url(v.PARTIAL_URI_LIST_3),
-                         v.AUTH_VER_URL)
 
     def test_check_mimetype(self):
         """

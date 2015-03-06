@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    Copyright (C) 2013, 2014 Kouhei Maeda <mkouhei@palmtb.net>
+    Copyright (C) 2013-2015 Kouhei Maeda <mkouhei@palmtb.net>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@ classifiers = [
     "Programming Language :: Python :: 3.3",
     "Programming Language :: Python :: 3.4",
     "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Internet",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -62,14 +63,13 @@ classifiers = [
 
 long_description = (
     open("README.rst").read() +
-    open(os.path.join("docs", "TODO.rst")).read() +
     open(os.path.join("docs", "HISTORY.rst")).read())
 
 
-requires = ['setuptools', 'requests', 'python-magic']
+requires = ['setuptools', 'requests', 'python-magic', 'urllib3']
 
 setup(name='swiftsc',
-      version='0.5.5',
+      version='0.6.0',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',
