@@ -8,7 +8,9 @@
 .. automodule:: swiftsc.client
    :members:
    :show-inheritance:
+   :inherited-members:
 
 .. automodule:: swiftsc.utils
    :members:
    :show-inheritance:
+   :inherited-members:
