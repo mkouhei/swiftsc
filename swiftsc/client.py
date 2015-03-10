@@ -78,7 +78,7 @@ class Client(object):
 
         if uri:
             #: Swift Storage URL
-            self.uri = auth_uri
+            self.uri = uri
         if token:
             self.headers = {'X-Auth-Token': token}
         elif auth_uri and username and password:
