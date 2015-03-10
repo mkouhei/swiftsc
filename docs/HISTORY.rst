@@ -1,6 +1,15 @@
 History
 -------
 
+0.6.1 (2015-03-09)
+^^^^^^^^^^^^^^^^^^
+
+* Fixed storage uri
+* Supported PyPy
+* Updated pre-commit hook script
+* Applied inherited-members to Sphinx documentation
+* Changed attribute of automodule
+
 0.6.0 (2015-03-06)
 ^^^^^^^^^^^^^^^^^^
 

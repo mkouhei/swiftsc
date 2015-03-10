@@ -69,7 +69,7 @@ long_description = (
 requires = ['setuptools', 'requests', 'python-magic', 'urllib3']
 
 setup(name='swiftsc',
-      version='0.6.0',
+      version='0.6.1',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',

@@ -7,8 +7,10 @@
 
 .. automodule:: swiftsc.client
    :members:
-   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
 
 .. automodule:: swiftsc.utils
    :members:
-   :undoc-members:
+   :show-inheritance:
+   :inherited-members:
