@@ -66,10 +66,10 @@ long_description = (
     open(os.path.join("docs", "HISTORY.rst")).read())
 
 
-requires = ['setuptools', 'requests', 'python-magic', 'urllib3']
+requires = ['setuptools', 'requests', 'python-magic']
 
 setup(name='swiftsc',
-      version='0.6.1',
+      version='0.6.2',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',

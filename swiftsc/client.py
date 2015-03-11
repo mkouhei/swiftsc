@@ -12,6 +12,9 @@ from swiftsc.exception import ValidationError
 #: see also http://goo.gl/6KIJnc
 TIMEOUT = 5.000
 
+# See: https://urllib3.readthedocs.org/en/latest/security.html
+requests.packages.urllib3.disable_warnings()
+
 
 def _temp_auth(obj):
     """ tmpauth """
