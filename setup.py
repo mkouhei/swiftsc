@@ -66,7 +66,7 @@ long_description = (
     open(os.path.join("docs", "HISTORY.rst")).read())
 
 
-requires = ['setuptools', 'requests', 'python-magic', 'urllib3']
+requires = ['setuptools', 'requests', 'python-magic']
 
 setup(name='swiftsc',
       version='0.6.1',
