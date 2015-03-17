@@ -329,7 +329,14 @@ class Object(_CRUD):
         self._validate(**kwargs)
 
         name = kwargs.get('name')
-        if kwargs.get('file_path'):
+        if hasattr(kwargs.get('file_path'), 'fileno'):
+            # stdin pipe
+            mtype, length, data = utils.retrieve_info_from_buffer(
+                kwargs.get('file_path'))
+            self._set_content_length(length=length)
+            self._set_content_type(mtype)
+
+        elif kwargs.get('file_path'):
             # local file
             self._set_content_length(file_path=kwargs.get('file_path'))
             self._set_content_type(file_path=kwargs.get('file_path'))
@@ -338,31 +345,32 @@ class Object(_CRUD):
             with open(kwargs.get('file_path'), 'rb') as fobj:
                 data = fobj.read()
 
-        elif hasattr(kwargs.get('file_path'), 'fileno'):
-            # stdin pipe
-            mtype, length, data = utils.check_mimetype(kwargs.get('file_path'))
-            self._set_content_length(length)
-            self._set_content_type(mtype)
-
         return requests.put('%(uri)s/%(name)s' % dict(uri=self.uri, name=name),
                             headers=self.headers,
                             data=data,
                             verify=self.verify,
                             timeout=self.timeout)
 
-    def _set_content_length(self, file_path=None):
+    def _set_content_length(self, length=None, file_path=None):
         """Set 'Content-Length' to HTTP headers
 
+        :param int lengthh: content length
         :param str file_path: local file path
         """
-        self.headers['Content-Length'] = os.path.getsize(file_path)
+        if length:
+            self.headers['Content-Length'] = length
+        elif file_path:
+            self.headers['Content-Length'] = os.path.getsize(file_path)
 
-    def _set_content_type(self, file_path=None):
+    def _set_content_type(self, mimetype=None, file_path=None):
         """Set 'Content-Type' to HTTP headers
 
         :param str file_path: local file path
         """
-        self.headers['Content-Type'] = utils.check_mimetype(file_path)
+        if mimetype:
+            self.headers['Content-Type'] = mimetype
+        elif file_path:
+            self.headers['Content-Type'] = utils.check_mimetype(file_path)
 
     def copy(self, src_object_name, dest_object_name):
         """Copy object
