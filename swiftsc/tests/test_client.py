@@ -97,6 +97,22 @@ class ClientTests(unittest.TestCase):
         self.assertEqual(201, res.status_code)
 
     @httprettified
+    def test_create_object_from_stdin(self):
+        """ unit test of crete object from stdin """
+        object_name = os.path.basename(v.TEST_FILE)
+        HTTPretty.register_uri(HTTPretty.PUT,
+                               '%s/%s/%s' % (v.STORAGE_URL,
+                                             v.CNTR_NAME,
+                                             object_name),
+                               status=201)
+        self.tclient.containers.container(v.CNTR_NAME)
+        data = open(v.TEST_FILE, 'rb', buffering=0)
+        res = self.tclient.containers.objects.create(name=object_name,
+                                                     file_path=data)
+        self.assertEqual(201, res.status_code)
+        data.close()
+
+    @httprettified
     def test_list_objects(self):
         """ Unit test of list_objects """
         HTTPretty.register_uri(HTTPretty.GET,
