@@ -65,8 +65,10 @@ long_description = (
     open("README.rst").read() +
     open(os.path.join("docs", "HISTORY.rst")).read())
 
-
 requires = ['setuptools', 'requests', 'python-magic']
+
+with open('requirements.txt', 'w') as fobj:
+    fobj.write('\n'.join(requires))
 
 setup(name='swiftsc',
       version='0.6.3',
