@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" swiftsc.client module. """
+"""swiftsc.client module."""
 import requests
 import os.path
 import json
@@ -17,7 +17,7 @@ requests.packages.urllib3.disable_warnings()
 
 
 def _temp_auth(obj):
-    """ tmpauth. """
+    """tmpauth."""
     auth_headers = {"X-Storage-User": obj.username,
                     "X-Storage-Pass": obj.password}
     res = requests.get(obj.auth_uri,
@@ -29,7 +29,7 @@ def _temp_auth(obj):
 
 
 def _keystone_auth(obj):
-    """ keystone auth. """
+    """keystone auth."""
     payload = {
         "auth": {
             "passwordCredentials": {
@@ -76,7 +76,7 @@ class Client(object):
                  tenant_name=None,
                  verify=True,
                  timeout=TIMEOUT):
-        """ constructor of Client. """
+        """constructor of Client."""
         #: SSL Cert Verification. (default: ``True``)
         self.verify = verify
         #: Request timeout. (default: ``5.0``)
@@ -109,7 +109,7 @@ class Client(object):
 
 class _CRUD(object):
 
-    """The :class:`_CRUD <_CRUD>` object. """
+    """The :class:`_CRUD <_CRUD>` object."""
 
     def __init__(self):
         self.uri = None
@@ -126,7 +126,7 @@ class _CRUD(object):
         self.uri = "%(uri)s/%(path)s" % {"uri": self.uri, "path": path}
 
     def no_verify(self):
-        """ Ignore SSL Cert Verification.
+        """Ignore SSL Cert Verification.
 
         Change ``verify`` to ``False``.
         """
@@ -185,7 +185,7 @@ class _CRUD(object):
                              timeout=self.timeout)
 
     def create(self, **kwargs):
-        r""" Create or replace resource.
+        r"""Create or replace resource.
 
         :rtype: `requests.Response`
         :return: Response of metadata single resource.
@@ -261,7 +261,7 @@ class Container(_CRUD):
     """
 
     def __init__(self, obj):
-        """ constructor of Container. """
+        """constructor of Container."""
         self.uri = obj.uri
         self.headers = obj.headers
         self.verify = obj.verify
@@ -315,7 +315,7 @@ class Object(_CRUD):
     """
 
     def __init__(self, obj):
-        """ Constructor of Object. """
+        """Constructor of Object."""
         if obj.container_name is None:
             raise KeyError('Container name is None')
         self.uri = obj.uri
