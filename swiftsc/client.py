@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" swiftsc.client """
+""" swiftsc.client module. """
 import requests
 import os.path
 import json
@@ -17,7 +17,7 @@ requests.packages.urllib3.disable_warnings()
 
 
 def _temp_auth(obj):
-    """ tmpauth """
+    """ tmpauth. """
     auth_headers = {"X-Storage-User": obj.username,
                     "X-Storage-Pass": obj.password}
     res = requests.get(obj.auth_uri,
@@ -29,7 +29,7 @@ def _temp_auth(obj):
 
 
 def _keystone_auth(obj):
-    """ keystone auth """
+    """ keystone auth. """
     payload = {
         "auth": {
             "passwordCredentials": {
@@ -47,8 +47,10 @@ def _keystone_auth(obj):
 
 
 class Client(object):
-    """The :class:`Client <Client>` object that provides REST connection
-    including tempauth or KeyStone Auth.::
+
+    """The :class:`Client <Client>` object.
+
+    This provides REST connection including tempauth or KeyStone Auth.::
 
         >>> from swiftsc import Client
         >>> client = Client(auth_uri='https://swift.example.org/auth/v1.0',
@@ -61,6 +63,7 @@ class Client(object):
     :param str token: Auth token
     :param str tenant_name: KeyStone tenant name
     """
+
     #: The path of the API endpoint.
     path = None
 
@@ -73,7 +76,7 @@ class Client(object):
                  tenant_name=None,
                  verify=True,
                  timeout=TIMEOUT):
-
+        """ constructor of Client. """
         #: SSL Cert Verification. (default: ``True``)
         self.verify = verify
         #: Request timeout. (default: ``5.0``)
@@ -105,6 +108,7 @@ class Client(object):
 
 
 class _CRUD(object):
+
     """The :class:`_CRUD <_CRUD>` object. """
 
     def __init__(self):
@@ -112,6 +116,7 @@ class _CRUD(object):
         self.headers = None
         self.verify = True
         self.timeout = TIMEOUT
+        """ Constructor of _CRUD """
 
     def _set_path(self, path):
         """Change endpoint.
@@ -148,7 +153,7 @@ class _CRUD(object):
                             timeout=self.timeout)
 
     def detail(self, obj_id=None):
-        """Show/Get a single resource
+        """Show/Get a single resource.
 
         :rtype: `requests.Response`
         :return: Response of detail single resource.
@@ -164,7 +169,7 @@ class _CRUD(object):
                             timeout=self.timeout)
 
     def show_metadata(self, obj_id=None):
-        """Show metadata
+        """Show metadata.
 
         :rtype: `requests.Response`
         :return: Response of metadata single resource.
@@ -180,7 +185,7 @@ class _CRUD(object):
                              timeout=self.timeout)
 
     def create(self, **kwargs):
-        """Create or replace resource
+        r""" Create or replace resource.
 
         :rtype: `requests.Response`
         :return: Response of metadata single resource.
@@ -197,7 +202,7 @@ class _CRUD(object):
 
     @staticmethod
     def _validate(**kwargs):
-        """Validate parameters
+        r"""Validate parameters.
 
         :rtype: dict
         :return: dict of keyword arguments
@@ -207,7 +212,7 @@ class _CRUD(object):
         return kwargs
 
     def update_metadata(self, obj_id, **kwargs):
-        """Create, Update (or delete) metadata
+        r"""Create, Update (or delete) metadata.
 
         :rtype: `requests.Response`
         :return: Response of updating a single resource.
@@ -223,7 +228,7 @@ class _CRUD(object):
                              timeout=self.timeout)
 
     def delete(self, obj_id):
-        """Delete resource
+        """Delete resource.
 
         :rtype: `requests.Response`
         :return: Response of deleting a single resource.
@@ -240,7 +245,10 @@ class _CRUD(object):
 
 
 class Container(_CRUD):
-    """Swift container resources.
+
+    """
+    Swift container resources.
+
     ::
 
         >>> client.containers.list().json()
@@ -251,7 +259,9 @@ class Container(_CRUD):
          {'bytes': 9690876040, 'count': 57, 'name': 'container-x'}]
 
     """
+
     def __init__(self, obj):
+        """ constructor of Container. """
         self.uri = obj.uri
         self.headers = obj.headers
         self.verify = obj.verify
@@ -261,7 +271,9 @@ class Container(_CRUD):
         self.objects = None
 
     def container(self, container_name):
-        """Set container name and create instances as attributes
+        r"""Set container name and create instances.
+
+        The instance has the attributes
         of :class:`Container <Container>`, as follows.
 
         * objects: :class:`Object <Object>`
@@ -277,7 +289,9 @@ class Container(_CRUD):
 
 
 class Object(_CRUD):
+
     """Objects resources.
+
     ::
 
         >>> client.containers.container('container-a')
@@ -299,7 +313,9 @@ class Object(_CRUD):
           'name': 'test2'}]
 
     """
+
     def __init__(self, obj):
+        """ Constructor of Object. """
         if obj.container_name is None:
             raise KeyError('Container name is None')
         self.uri = obj.uri
@@ -312,14 +328,14 @@ class Object(_CRUD):
         self.object_name = None
 
     def object(self, object_name):
-        """Set object name
+        """Set object name.
 
         :param str object_name: object name
         """
         self.object_name = object_name
 
     def create(self, **kwargs):
-        """Create object
+        r"""Create object.
 
         :param \*\*kwargs: parameters for creating object
 
@@ -352,7 +368,7 @@ class Object(_CRUD):
                             timeout=self.timeout)
 
     def _set_content_length(self, length=None, file_path=None):
-        """Set 'Content-Length' to HTTP headers
+        """Set 'Content-Length' to HTTP headers.
 
         :param int lengthh: content length
         :param str file_path: local file path
@@ -363,7 +379,7 @@ class Object(_CRUD):
             self.headers['Content-Length'] = os.path.getsize(file_path)
 
     def _set_content_type(self, mimetype=None, file_path=None):
-        """Set 'Content-Type' to HTTP headers
+        """Set 'Content-Type' to HTTP headers.
 
         :param str file_path: local file path
         """
@@ -373,7 +389,7 @@ class Object(_CRUD):
             self.headers['Content-Type'] = utils.check_mimetype(file_path)
 
     def copy(self, src_object_name, dest_object_name):
-        """Copy object
+        """Copy object.
 
         :rtype: `requests.Response`
         :return: Response of copy object
@@ -395,7 +411,7 @@ class Object(_CRUD):
 
 
 def _retrieve_public_url_swift(r_json):
-    """Retrieve Swift public url from KeyStone
+    """Retrieve Swift public url from KeyStone.
 
     :rtype: string
     :return: swift public url
@@ -410,7 +426,7 @@ def _retrieve_public_url_swift(r_json):
 
 def retrieve_token(auth_uri, username, password,
                    tenant_name=None, timeout=TIMEOUT, verify=True):
-    """Retrieve token
+    r"""Retrieve token.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -455,7 +471,7 @@ def retrieve_token(auth_uri, username, password,
 
 
 def _set_auth_info(username, password, tenant_name):
-    """Generate auth parameters for KeyStone auth
+    """Generate auth parameters for KeyStone auth.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -477,7 +493,7 @@ def _set_auth_info(username, password, tenant_name):
 
 
 def _generate_url(partial_uri_list):
-    """Generate url
+    """Generate url.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -497,7 +513,7 @@ def _generate_url(partial_uri_list):
 
 
 def _retrieve_token_keystone(r_json):
-    """Retrieve token of KeyStone Auth
+    """Retrieve token of KeyStone Auth.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -511,7 +527,7 @@ def _retrieve_token_keystone(r_json):
 
 
 def list_containers(token, storage_url, timeout=TIMEOUT, verify=True):
-    """List containers
+    r"""List containers.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -537,7 +553,7 @@ def list_containers(token, storage_url, timeout=TIMEOUT, verify=True):
 
 def create_container(token, storage_url, container_name,
                      timeout=TIMEOUT, verify=True):
-    """Create container
+    r"""Create container.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -559,7 +575,7 @@ def create_container(token, storage_url, container_name,
 
 def is_container(token, storage_url, container_name,
                  timeout=TIMEOUT, verify=True):
-    """Check container
+    r"""Check container.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -581,7 +597,7 @@ def is_container(token, storage_url, container_name,
 
 def delete_container(token, storage_url, container_name,
                      timeout=TIMEOUT, verify=True):
-    """Delete container
+    r"""Delete container.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -602,7 +618,7 @@ def delete_container(token, storage_url, container_name,
 
 
 def create_object(*args, **kwargs):
-    """Create object
+    r"""Create object.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -661,7 +677,7 @@ def create_object(*args, **kwargs):
 
 def list_objects(token, storage_url, container_name,
                  timeout=TIMEOUT, verify=True):
-    """List objects
+    r"""List objects.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -686,7 +702,7 @@ def list_objects(token, storage_url, container_name,
 
 def is_object(token, storage_url, container_name, object_name,
               timeout=TIMEOUT, verify=True):
-    """Check object
+    r"""Check object.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -708,7 +724,7 @@ def is_object(token, storage_url, container_name, object_name,
 
 def retrieve_object(token, storage_url, container_name,
                     object_name, timeout=TIMEOUT, verify=True):
-    """Retrieve object
+    r"""Retrieve object.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -730,7 +746,7 @@ def retrieve_object(token, storage_url, container_name,
 
 
 def copy_object(*args, **kwargs):
-    """Copy object
+    r"""Copy object.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -774,7 +790,7 @@ def copy_object(*args, **kwargs):
 
 def delete_object(token, storage_url, container_name,
                   object_name, timeout=TIMEOUT, verify=True):
-    """Delete object
+    r"""Delete object.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.

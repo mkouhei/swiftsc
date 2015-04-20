@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-""" swiftsc.utils """
+""" swiftsc utility module. """
 import magic
 import sys
 from io import BytesIO
 
 
 def check_mimetype(filepath):
-    """Check mimetype of file
+    """ Check mimetype of file.
 
     :rtype: str
     :return: mimetype
@@ -29,7 +29,7 @@ def check_mimetype(filepath):
 
 
 def check_mimetype_buffer(fileobj):
-    """Check mimetype of file
+    """ Check mimetype of file.
 
     :rtype: str
     :return: mimetype
@@ -52,7 +52,7 @@ def check_mimetype_buffer(fileobj):
 
 
 def retrieve_info_from_buffer(file_object):
-    """Check mimetype of file object
+    """ Check mimetype of file object.
 
     :rtype: tuple
     :return: mimetype, content length, data
@@ -72,7 +72,7 @@ def retrieve_info_from_buffer(file_object):
 
 
 def from_file(file_path):
-    '''Check file
+    """ Check file.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -81,7 +81,7 @@ def from_file(file_path):
     :return: True is file object
 
     :param str file_path: file path
-    '''
+    """
     is_file = True
     if hasattr(file_path, 'fileno'):
         # stdin pipe

@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
-"""
-pdnsapi_lib.exception
-~~~~~~~~~~~~~~~~~~~~~
-"""
+""" swiftsc exception module. """
 
 
 class Error(Exception):
-    """Base error class.
+
+    """ Base error class.
 
     Child classes should define an status code, title, and message_format.
     """
 
     def __init__(self, message=None):
+        """ constructor of Error. """
         super(Error, self).__init__(message)
 
 
 class ValidationError(Error):
-    """Not found key """
+
+    """ Not found key. """
+
     pass

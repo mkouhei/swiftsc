@@ -1,3 +1,1 @@
-"""
-Test module of swiftsc
-"""
+""" Test module of swiftsc. """

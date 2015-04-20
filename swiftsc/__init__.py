@@ -1,6 +1,7 @@
-"""
-Initialize
-----------
+"""swiftsc is OpenStack Swift simple client.
+
+Initialize.
+-----------
 
 Swift tempauth
 ~~~~~~~~~~~~~~
