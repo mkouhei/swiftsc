@@ -10,8 +10,8 @@ The main purpose of this tool is used as a core module for backup tool.
    :target: http://travis-ci.org/mkouhei/swiftsc
 .. image:: https://coveralls.io/repos/mkouhei/swiftsc/badge.png?branch=devel
    :target: https://coveralls.io/r/mkouhei/swiftsc?branch=devel
-.. image:: https://pypip.in/v/swiftsc/badge.png
-   :target: https://crate.io/packages/swiftsc
+.. image:: https://img.shields.io/pypi/v/swiftsc.svg
+   :target: https://pypi.python.org/pypi/swiftsc
 .. image:: https://readthedocs.org/projects/swiftsc/badge/?version=latest
    :target: https://readthedocs.org/projects/swiftsc/?badge=latest
    :alt: Documentation Status
