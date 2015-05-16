@@ -1,6 +1,17 @@
 History
 -------
 
+0.6.4 (2015-05-16)
+^^^^^^^^^^^^^^^^^^
+
+* Supports wheel
+* Adds extras_require to setup.py
+* Applies pep257
+* Pins httpretty version to 0.8.6
+* Workaround Read the docs theme
+* Changed to generate requirements.txt automatically
+* Adds basic usage new API
+
 0.6.3 (2015-03-17)
 ^^^^^^^^^^^^^^^^^^
 
