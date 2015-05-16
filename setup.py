@@ -18,7 +18,7 @@
 
 import os
 import sys
-from setuptools import setup, find_packages
+from setuptools import setup
 from setuptools.command.test import test as TestCommand
 
 
@@ -65,10 +65,20 @@ long_description = (
     open("README.rst").read() +
     open(os.path.join("docs", "HISTORY.rst")).read())
 
-requires = ['setuptools', 'requests', 'python-magic']
+requires = ['setuptools',
+            'requests',
+            'python-magic']
+extras_require = {
+    'reST': ['Sphinx'],
+    }
+if os.environ.get('READTHEDOCS', None):
+    extras_require['reST'].append('recommonmark')
 
 with open('requirements.txt', 'w') as fobj:
     fobj.write('\n'.join(requires))
+
+with open('extras_requirement.txt', 'w') as fobj:
+    fobj.write('\n'.join(extras_require.get('reST')))
 
 setup(name='swiftsc',
       version='0.6.3',
@@ -79,7 +89,8 @@ setup(name='swiftsc',
       url='https://github.com/mkouhei/swiftsc',
       license='GNU General Public License version 3',
       classifiers=classifiers,
-      packages=find_packages(),
+      packages=['swiftsc'],
       install_requires=requires,
+      extras_require=extras_require,
       tests_require=['tox'],
       cmdclass={'test': Tox},)
