@@ -446,7 +446,7 @@ def retrieve_token(auth_uri, username, password,
     :param str password: Swift User password
     :param str tenant_name: tenant name of OpenStack
     :param float timeout: connection timeout
-    :param bool verify: True is check a host’s SSL certificate
+    :param bool verify: True is check a host's SSL certificate
     """
     if tenant_name:
         # using OpenStack KeyStone
@@ -538,7 +538,7 @@ def list_containers(token, storage_url, timeout=TIMEOUT, verify=True):
     :param str token: authentication token
     :param str storage_url: URL of swift storage
     :param float timeout: connection timeout
-    :param verify bool: True is check a host’s SSL certificate
+    :param verify bool: True is check a host's SSL certificate
     """
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
@@ -565,7 +565,7 @@ def create_container(token, storage_url, container_name,
     :param str storage_url: URL of swift storage
     :param str container_name: container name
     :param float timeout: connection timeout
-    :param bool verify: True is check a host’s SSL certificate
+    :param bool verify: True is check a host's SSL certificate
     """
     headers = {'X-Auth-Token': token}
     url = _generate_url([storage_url, container_name])
@@ -587,7 +587,7 @@ def is_container(token, storage_url, container_name,
     :param str storage_url: URL of swift storage
     :param str container_name: container name
     :param float timeout: connection timeout
-    :param bool verify: True is check a host’s SSL certificate
+    :param bool verify: True is check a host's SSL certificate
     """
     headers = {'X-Auth-Token': token}
     url = _generate_url([storage_url, container_name])
@@ -609,7 +609,7 @@ def delete_container(token, storage_url, container_name,
     :param str storage_url: URL of swift storage
     :param str container_name: container name
     :param float timeout: connection timeout
-    :param bool verify: True is check a host’s SSL certificate
+    :param bool verify: True is check a host's SSL certificate
     """
     headers = {'X-Auth-Token': token}
     url = _generate_url([storage_url, container_name])
@@ -689,7 +689,7 @@ def list_objects(token, storage_url, container_name,
     :param str storage_url: URL of swift storage
     :param str container_name: container name
     :param float timeout: connection timeout
-    :param bool verify: True is check a host’s SSL certificate
+    :param bool verify: True is check a host's SSL certificate
     """
     headers = {'X-Auth-Token': token}
     payload = {'format': 'json'}
@@ -714,7 +714,7 @@ def is_object(token, storage_url, container_name, object_name,
     :param str storage_url: URL of swift storage
     :param str container_name: container name
     :param float timeout: connection timeout
-    :param bool verify: True is check a host’s SSL certificate
+    :param bool verify: True is check a host's SSL certificate
     """
     headers = {'X-Auth-Token': token}
     url = _generate_url([storage_url, container_name, object_name])
@@ -737,7 +737,7 @@ def retrieve_object(token, storage_url, container_name,
     :param str container_name: container name
     :param str object_name: object name
     :param float timeout: connection timeout
-    :param bool verify: True is check a host’s SSL certificate
+    :param bool verify: True is check a host's SSL certificate
     """
     headers = {'X-Auth-Token': token}
     url = _generate_url([storage_url, container_name, object_name])
@@ -760,7 +760,7 @@ def copy_object(*args, **kwargs):
     :param str src_object_name: object name of source
     :param str dest_object_name: object name of destination
     :param float timeout: connection timeout
-    :param bool verify: True is check a host’s SSL certificate
+    :param bool verify: True is check a host's SSL certificate
     """
     token = args[0]
     storage_url = args[1]
@@ -803,7 +803,7 @@ def delete_object(token, storage_url, container_name,
     :param str container_name: container name
     :param str object_name: object name
     :param float timeout: connection timeout
-    :param bool verify: True is check a host’s SSL certificate
+    :param bool verify: True is check a host's SSL certificate
     """
     headers = {'X-Auth-Token': token}
     url = _generate_url([storage_url, container_name, object_name])
