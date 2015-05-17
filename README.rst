@@ -29,9 +29,10 @@ Setup
 -----
 ::
 
-   $ git clone https://github.com/mkouhei/swiftsc
-   $ cd swiftsc
-   $ sudo python setup.py install
+   $ pip install --user swiftsc
+   or
+   (venv)$ pip install swiftsc
+
 
 workaround of Python 3.3
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -49,22 +50,6 @@ So you must install from github until next version will release.::
   $ git clone https://github.com/mkouhei/swiftsc
   $ cd swiftsc
   $ sudo python setup.py install
-
-Development
------------
-
-Firstly copy pre-commit hook script.::
-
-   $ cp -f utils/pre-commit.txt .git/hooks/pre-commit
-
-Debian systems
-^^^^^^^^^^^^^^
-
-Next install python2.7, python3.3 later, and python-requests, python-magic, python-tox, pychecker. Below in Debian GNU/Linux Sid system,::
-
-   $ sudo apt-get install python python-requests python-pytest pep8 python-magic python-tox pychecker
-
-Then checkout 'devel' branch for development, commit your changes. Before pull request, execute git rebase.
 
 
 See also
