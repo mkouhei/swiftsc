@@ -185,12 +185,12 @@ class _CRUD(object):
                              timeout=self.timeout)
 
     def create(self, **kwargs):
-        r"""Create or replace resource.
+        """Create or replace resource.
 
         :rtype: `requests.Response`
         :return: Response of metadata single resource.
 
-        :param \*\*kwargs: parameters
+        :param **kwargs: parameters
         """
         self._validate(**kwargs)
         return requests.put('%(uri)s/%(id)s' % {'uri': self.uri,
@@ -202,23 +202,23 @@ class _CRUD(object):
 
     @staticmethod
     def _validate(**kwargs):
-        r"""Validate parameters.
+        """Validate parameters.
 
         :rtype: dict
         :return: dict of keyword arguments
 
-        :param \*\*kwargs: parameters
+        :param **kwargs: parameters
         """
         return kwargs
 
     def update_metadata(self, obj_id, **kwargs):
-        r"""Create, Update (or delete) metadata.
+        """Create, Update (or delete) metadata.
 
         :rtype: `requests.Response`
         :return: Response of updating a single resource.
 
         :param str obj_id: resource id (or resource name)
-        :param \*\*kwargs: keyword arguments of method
+        :param **kwargs: keyword arguments of method
         """
         return requests.post("%(uri)s/%(id)s" % {"uri": self.uri,
                                                  "id": obj_id},
@@ -335,9 +335,9 @@ class Object(_CRUD):
         self.object_name = object_name
 
     def create(self, **kwargs):
-        r"""Create object.
+        """Create object.
 
-        :param \*\*kwargs: parameters for creating object
+        :param **kwargs: parameters for creating object
 
         :rtype: `requests.Response`
         :return: Response of create object
@@ -426,7 +426,7 @@ def _retrieve_public_url_swift(r_json):
 
 def retrieve_token(auth_uri, username, password,
                    tenant_name=None, timeout=TIMEOUT, verify=True):
-    r"""Retrieve token.
+    """Retrieve token.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -527,7 +527,7 @@ def _retrieve_token_keystone(r_json):
 
 
 def list_containers(token, storage_url, timeout=TIMEOUT, verify=True):
-    r"""List containers.
+    """List containers.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -553,7 +553,7 @@ def list_containers(token, storage_url, timeout=TIMEOUT, verify=True):
 
 def create_container(token, storage_url, container_name,
                      timeout=TIMEOUT, verify=True):
-    r"""Create container.
+    """Create container.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -575,7 +575,7 @@ def create_container(token, storage_url, container_name,
 
 def is_container(token, storage_url, container_name,
                  timeout=TIMEOUT, verify=True):
-    r"""Check container.
+    """Check container.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -597,7 +597,7 @@ def is_container(token, storage_url, container_name,
 
 def delete_container(token, storage_url, container_name,
                      timeout=TIMEOUT, verify=True):
-    r"""Delete container.
+    """Delete container.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -618,7 +618,7 @@ def delete_container(token, storage_url, container_name,
 
 
 def create_object(*args, **kwargs):
-    r"""Create object.
+    """Create object.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -626,7 +626,7 @@ def create_object(*args, **kwargs):
     :rtype: int
     :return: status code; 201 (Created)
 
-    :param dict \*\*kwargs: token, storage_url, container_name,
+    :param dict **kwargs: token, storage_url, container_name,
 
         local_file, object_name, timeout, verify
     """
@@ -677,7 +677,7 @@ def create_object(*args, **kwargs):
 
 def list_objects(token, storage_url, container_name,
                  timeout=TIMEOUT, verify=True):
-    r"""List objects.
+    """List objects.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -702,7 +702,7 @@ def list_objects(token, storage_url, container_name,
 
 def is_object(token, storage_url, container_name, object_name,
               timeout=TIMEOUT, verify=True):
-    r"""Check object.
+    """Check object.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -724,7 +724,7 @@ def is_object(token, storage_url, container_name, object_name,
 
 def retrieve_object(token, storage_url, container_name,
                     object_name, timeout=TIMEOUT, verify=True):
-    r"""Retrieve object.
+    """Retrieve object.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -746,7 +746,7 @@ def retrieve_object(token, storage_url, container_name,
 
 
 def copy_object(*args, **kwargs):
-    r"""Copy object.
+    """Copy object.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
@@ -790,7 +790,7 @@ def copy_object(*args, **kwargs):
 
 def delete_object(token, storage_url, container_name,
                   object_name, timeout=TIMEOUT, verify=True):
-    r"""Delete object.
+    """Delete object.
 
     .. warning::
         This method is deprecated, will be removed in version 0.7.0.
