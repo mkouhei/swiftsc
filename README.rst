@@ -6,10 +6,10 @@ This tool is simple client library of OpenStack Swift.
 This tool is intended to be used in the module and Python script other.
 The main purpose of this tool is used as a core module for backup tool.
 
-.. image:: https://secure.travis-ci.org/mkouhei/swiftsc.png?branch=devel
+.. image:: https://secure.travis-ci.org/mkouhei/swiftsc.png?branch=master
    :target: http://travis-ci.org/mkouhei/swiftsc
-.. image:: https://coveralls.io/repos/mkouhei/swiftsc/badge.png?branch=devel
-   :target: https://coveralls.io/r/mkouhei/swiftsc?branch=devel
+.. image:: https://coveralls.io/repos/mkouhei/swiftsc/badge.png?branch=master
+   :target: https://coveralls.io/r/mkouhei/swiftsc?branch=master
 .. image:: https://img.shields.io/pypi/v/swiftsc.svg
    :target: https://pypi.python.org/pypi/swiftsc
 .. image:: https://readthedocs.org/projects/swiftsc/badge/?version=latest
