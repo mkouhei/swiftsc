@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """ Sample data for unit test """
-import json
 import os.path
 
 USERNAME = "username"
@@ -15,7 +14,6 @@ STORAGE_URL = ('https://example.org/v1/'
                'AUTH_c1d6a4bc-892d-4106-9c62-36a48ea0f129')
 CONTAINERS = [{'bytes': 0, 'count': 0, 'name': 'test'},
               {'bytes': 0, 'count': 0, 'name': 'test2'}]
-CONTAINERS_JSON = json.JSONEncoder().encode(CONTAINERS)
 CNTR_NAME = "test_container"
 OBJECTS = [{'bytes': 5246,
             'content_type': 'text/plain',
@@ -32,7 +30,6 @@ OBJECTS = [{'bytes': 5246,
             'hash': 'd226a3f396cbe3c187f2b7b78030eebb',
             'last_modified': '2013-05-01T09:23:26.092580',
             'name': 'sample_3.txt'}]
-OBJECTS_JSON = json.JSONEncoder().encode(OBJECTS)
 OBJECT_NAME = 'sample.txt'
 DEST_OBJ_NAME = 'sample_1.txt'
 TEST_FILE = os.path.abspath('swiftsc/tests/sample.txt')
