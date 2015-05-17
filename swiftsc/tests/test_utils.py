@@ -16,49 +16,39 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import unittest
-from httpretty import HTTPretty, httprettified
+import requests_mock
 from swiftsc import utils as u
 from swiftsc import client as c
 from swiftsc.tests import test_vars as v
 
 
 class UtilsTests(unittest.TestCase):
-    """
-    Unit test of utils.py
-    """
 
-    @httprettified
-    def test_return_json(self):
-        """
-        test return json
-        """
-        HTTPretty.register_uri(HTTPretty.GET,
-                               '%s/%s/' % (v.STORAGE_URL,
-                                           v.CNTR_NAME),
-                               body=v.OBJECTS_JSON.encode('utf-8'))
+    """Unit test of utils.py"""
+
+    @requests_mock.Mocker()
+    def test_return_json(self, _mock):
+        """test return json"""
+        _mock.get('%s/%s/' % (v.STORAGE_URL, v.CNTR_NAME),
+                  json=v.OBJECTS,
+                  status_code=200)
         res = c.list_objects(v.TOKEN, v.STORAGE_URL, v.CNTR_NAME)
         self.assertTrue(isinstance(res, list))
 
     def test_check_mimetype(self):
-        """
-        test checking mimetype
-        """
+        """test checking mimetype"""
         self.assertEqual(v.TEST_FILE_MIMETYPE,
                          u.check_mimetype(v.TEST_FILE))
 
     def test_check_mimetype_buffer(self):
-        """
-        test checking mimetype of buffer
-        """
+        """test checking mimetype of buffer"""
         fileobj = open(v.TEST_FILE, 'rb')
         self.assertEqual(v.TEST_FILE_MIMETYPE,
                          u.check_mimetype_buffer(fileobj))
         fileobj.close()
 
     def test_retrieve_info_from_buffer(self):
-        """
-        test retriving info from buffer
-        """
+        """test retriving info from buffer"""
         fileobj = open(v.TEST_FILE, 'rb')
         file_content = fileobj.read()
         fileobj.seek(0)
