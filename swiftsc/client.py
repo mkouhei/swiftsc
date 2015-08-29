@@ -420,7 +420,7 @@ def _retrieve_public_url_swift(r_json):
     """
     endpoints = [ep.get('endpoints')[0]
                  for ep in r_json.get('access').get('serviceCatalog')
-                 if ep.get('name') == 'swift'][0]
+                 if ep.get('type') == 'object-store'][0]
     return endpoints.get('publicURL')
 
 
