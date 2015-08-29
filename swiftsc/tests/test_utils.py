@@ -16,24 +16,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import unittest
-import requests_mock
 from swiftsc import utils as u
-from swiftsc import client as c
 from swiftsc.tests import test_vars as v
 
 
 class UtilsTests(unittest.TestCase):
 
     """Unit test of utils.py"""
-
-    @requests_mock.Mocker()
-    def test_return_json(self, _mock):
-        """test return json"""
-        _mock.get('%s/%s/' % (v.STORAGE_URL, v.CNTR_NAME),
-                  json=v.OBJECTS,
-                  status_code=200)
-        res = c.list_objects(v.TOKEN, v.STORAGE_URL, v.CNTR_NAME)
-        self.assertTrue(isinstance(res, list))
 
     def test_check_mimetype(self):
         """test checking mimetype"""

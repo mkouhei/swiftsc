@@ -17,13 +17,23 @@ Using Swift tempauth.
 KeyStone Auth
 ~~~~~~~~~~~~~
 
-Using KeyStone. Not yet support Identitty API v3.
+Using Identity API v2.0
 ::
 
     $ python
     >>> from swiftsc import Client
     >>> client = Client(auth_uri='https://keystone.example.org/v2.0/tokens',
-    ... username='myaccount', password='passw0rd', tenant_name='mytennant')
+    ... username='user_name', password='passw0rd', tenant_name='tenant_name')
+
+
+Using Identity API (>= v0.7.0). You must pass ``user id`` to ``username`` and,
+``project id`` to ``tenant_name``.
+::
+
+    $ python
+    >>> from swiftsc import Client
+    >>> client = Client(auth_uri='https://keystone.example.org/v3/auth/tokens',
+    ... username='user_id', password='passw0rd', tenant_name='project_id')
 
 
 Create container

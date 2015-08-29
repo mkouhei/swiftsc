@@ -69,21 +69,3 @@ def retrieve_info_from_buffer(file_object):
     data = bio.read()
     bio.close()
     return (mimetype, content_length, data)
-
-
-def from_file(file_path):
-    """Check file.
-
-    .. warning::
-        This method is deprecated, will be removed in version 0.7.0.
-
-    :rtype: bool
-    :return: True is file object
-
-    :param str file_path: file path
-    """
-    is_file = True
-    if hasattr(file_path, 'fileno'):
-        # stdin pipe
-        is_file = False
-    return is_file
