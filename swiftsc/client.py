@@ -28,21 +28,51 @@ def _temp_auth(obj):
     obj.uri = res.headers.get("X-Storage-URL")
 
 
+def _keystone_auth_payload(obj):
+    """Keystone auth request payload."""
+    if "/v2.0/tokens" in obj.auth_uri:
+        payload = {
+            "auth": {
+                "passwordCredentials": {
+                    "username": obj.username,
+                    "password": obj.password},
+                "tenantName": obj.tenant_name}}
+    elif "/v3/auth/tokens" in obj.auth_uri:
+        payload = {
+            "auth": {
+                "scope": {
+                    "project": {
+                        "id": obj.tenant_name}},
+                "identity": {
+                    "methods": ["password"],
+                    "password": {
+                        "user": {
+                            "id": obj.username,
+                            "password": obj.password}}}}}
+    return payload
+
+
+def _set_auth_token(res):
+    """Retrieve Auth token."""
+    if res.json().get('access'):
+        # Identity API v2.0
+        token = res.json()['access']['token']['id']
+    elif res.headers.get('x-subject-token'):
+        # Identity API v3
+        token = res.headers.get('x-subject-token')
+    return {"X-Auth-Token": token}
+
+
 def _keystone_auth(obj):
     """keystone auth."""
-    payload = {
-        "auth": {
-            "passwordCredentials": {
-                "username": obj.username,
-                "password": obj.password},
-            "tenantName": obj.tenant_name}}
+    payload = _keystone_auth_payload(obj)
     headers = {"Content-Type": "application/json"}
     res = requests.post(obj.auth_uri,
                         headers=headers,
                         data=json.dumps(payload),
                         verify=obj.verify,
                         timeout=obj.timeout)
-    obj.headers = {"X-Auth-Token": res.json()['access']['token']['id']}
+    obj.headers = _set_auth_token(res)
     obj.uri = _retrieve_public_url_swift(res.json())
 
 
@@ -418,10 +448,17 @@ def _retrieve_public_url_swift(r_json):
 
     :param dict r_json: response payload from KeyStone auth
     """
-    endpoints = [ep.get('endpoints')[0]
-                 for ep in r_json.get('access').get('serviceCatalog')
-                 if ep.get('type') == 'object-store'][0]
-    return endpoints.get('publicURL')
+    if r_json.get('access'):
+        # Identity API v2.0
+        url = [ep.get('endpoints')[0]
+               for ep in r_json.get('access').get('serviceCatalog')
+               if ep.get('type') == 'object-store'][0].get('publicURL')
+    else:
+        # Identity API v3
+        url = [ep.get('endpoints')[0]
+               for ep in r_json.get('token').get('catalog')
+               if ep.get('type') == 'object-store'][0].get('url')
+    return url
 
 
 def retrieve_token(auth_uri, username, password,
