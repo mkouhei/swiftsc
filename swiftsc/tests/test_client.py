@@ -172,6 +172,31 @@ class OldClientTests(unittest.TestCase):
                                                     v.PASSWORD))
 
     @requests_mock.Mocker()
+    def test_get_token_keystone(self, _mock):
+        """Unit test of retrieve_token"""
+        _mock.post(v.KEYSTONE_URL,
+                   json=v.KEYSTONE)
+        cli = client.Client(auth_uri=v.KEYSTONE_URL,
+                            username=v.USERNAME,
+                            password=v.PASSWORD,
+                            tenant_name=v.TENANT_NAME)
+        self.assertEqual(cli.uri, v.STORAGE_URL_KS)
+        self.assertEqual(cli.headers['X-Auth-Token'], v.KEYSTONE_TOKEN)
+
+    @requests_mock.Mocker()
+    def test_get_token_keystone_v3(self, _mock):
+        """Unit test of retrieve_token"""
+        _mock.post(v.KEYSTONE_V3_URL,
+                   headers={'x-subject-token': v.KEYSTONE_TOKEN},
+                   json=v.KEYSTONE_V3)
+        cli = client.Client(auth_uri=v.KEYSTONE_V3_URL,
+                            username=v.USERNAME,
+                            password=v.PASSWORD,
+                            tenant_name=v.TENANT_NAME)
+        self.assertEqual(cli.uri, v.STORAGE_URL_KS)
+        self.assertEqual(cli.headers['X-Auth-Token'], v.KEYSTONE_TOKEN)
+
+    @requests_mock.Mocker()
     def test_retrieve_token_keystone(self, _mock):
         """Unit test of retrieve_token"""
         _mock.post(v.KEYSTONE_URL,

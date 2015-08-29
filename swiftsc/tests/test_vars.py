@@ -9,6 +9,7 @@ PARTIAL_URI_LIST_3 = ["https://example.org", "auth", "v1.0"]
 AUTH_URL = "https://example.org/auth"
 AUTH_VER_URL = "https://example.org/auth/v1.0"
 KEYSTONE_URL = 'https://keystone.example.org/v2.0/tokens'
+KEYSTONE_V3_URL = 'https://keystone.example.org/v3/auth/tokens'
 TOKEN = 'AUTH_tk55ed712a114a467ca10e3841bb98accf'
 STORAGE_URL = ('https://example.org/v1/'
                'AUTH_c1d6a4bc-892d-4106-9c62-36a48ea0f129')
@@ -107,6 +108,16 @@ KEYSTONE = {
                  'roles': [{'name': 'Member'}],
                  'roles_links': [],
                  'username': 'guest'}}}
+KEYSTONE_V3 = {
+    'token': {
+        'catalog': [
+            {'endpoints': [{'id': '43d72312224d4d27a4c261a6f16ecd1c',
+                            'internalURL': '%s:8080/v1/AUTH_%s' % (DOM, KS),
+                            'url': '%s:8080/v1/AUTH_%s' % (DOM, KS),
+                            'region': 'RegionOne'}],
+             'endpoints_links': [],
+             'name': 'swift',
+             'type': 'object-store'}]}}
 TOKEN_KEYSTONE = '4bbf2976ab9d4703b85207054dbdb701'
 STORAGE_URL_KS = ('http://example.org:8080/v1/'
                   'AUTH_c6f41799c8e44974bf6b2f3af9495dc0')
