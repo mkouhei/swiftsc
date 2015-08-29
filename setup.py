@@ -87,7 +87,7 @@ with open('extras_requirement.txt', 'w') as fobj:
     fobj.write('\n'.join(extras_require.get('reST')))
 
 setup(name='swiftsc',
-      version='0.6.5',
+      version='0.7.0',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',

@@ -1,6 +1,16 @@
 History
 -------
 
+0.7.0 (2015-08-30)
+^^^^^^^^^^^^^^^^^^
+
+* Support Python 3.50-rc2.
+* Discard the functions not related Client class.
+* Supports Identity API v3 of OpenStack KeyStone.
+* Fixes serviceCatlog key for the public cloud using OpenStack.
+* Changes development status.
+* Change Sphinx theme to sphinx_rtd_theme.
+
 0.6.5 (2015-05-17)
 ^^^^^^^^^^^^^^^^^^
 
