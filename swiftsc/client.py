@@ -6,7 +6,7 @@ import json
 import copy
 
 from swiftsc import utils
-from swiftsc.exception import ValidationError
+from swiftsc.exception import ValidationError, AuthenticationError
 
 #: connection timeout
 #: see also http://goo.gl/6KIJnc
@@ -72,6 +72,8 @@ def _keystone_auth(obj):
                         data=json.dumps(payload),
                         verify=obj.verify,
                         timeout=obj.timeout)
+    if res.status_code != 200:
+        raise AuthenticationError('Authentication failed')
     obj.headers = _set_auth_token(res)
     obj.uri = _retrieve_public_url_swift(res.json())
 

@@ -19,3 +19,10 @@ class ValidationError(Error):
     """Not found key."""
 
     pass
+
+
+class AuthenticationError(Error):
+
+    """Authentication failed."""
+
+    pass

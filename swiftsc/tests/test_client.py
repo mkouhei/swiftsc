@@ -19,6 +19,7 @@ import os.path
 import unittest
 import requests_mock
 from swiftsc.client import Client
+from swiftsc.exception import AuthenticationError
 from swiftsc.tests import test_vars as v
 
 
@@ -62,6 +63,23 @@ class ClientTests(unittest.TestCase):
                      tenant_name=v.TENANT_NAME)
         self.assertEqual(cli.uri, v.STORAGE_URL_KS)
         self.assertEqual(cli.headers['X-Auth-Token'], v.KEYSTONE_TOKEN)
+
+    @requests_mock.Mocker()
+    def test_get_token_keystone_fail(self, _mock):
+        """Unit test of retrieve_token"""
+        _mock.post(v.KEYSTONE_V3_URL,
+                   headers={'x-subject-token': v.KEYSTONE_TOKEN},
+                   status_code=401,
+                   json={'error': {
+                       'message': ('The request you have made requires '
+                                   'authentication.'),
+                       'code': 401,
+                       'title': 'Unauthorized'}})
+        with self.assertRaises(AuthenticationError):
+            Client(auth_uri=v.KEYSTONE_V3_URL,
+                   username=v.USERNAME,
+                   password=v.PASSWORD,
+                   tenant_name=v.TENANT_NAME)
 
     @requests_mock.Mocker()
     def test_list_containers(self, _mock):
