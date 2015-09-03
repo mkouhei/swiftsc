@@ -1,6 +1,12 @@
 History
 -------
 
+0.7.1 (2015-09-04)
+^^^^^^^^^^^^^^^^^^
+
+* Adds Authentication error for temp auth.
+* Adds Authentication error for KeyStone.
+
 0.7.0 (2015-08-30)
 ^^^^^^^^^^^^^^^^^^
 
