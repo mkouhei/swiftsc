@@ -24,6 +24,8 @@ def _temp_auth(obj):
                        headers=auth_headers,
                        verify=obj.verify,
                        timeout=obj.timeout)
+    if res.status_code != 200:
+        raise AuthenticationError('Authentication failed')
     obj.headers = {"X-Auth-Token": res.headers.get("X-Auth-Token")}
     obj.uri = res.headers.get("X-Storage-URL")
 
