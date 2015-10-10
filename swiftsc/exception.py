@@ -3,7 +3,6 @@
 
 
 class Error(Exception):
-
     """Base error class.
 
     Child classes should define an status code, title, and message_format.
@@ -15,14 +14,12 @@ class Error(Exception):
 
 
 class ValidationError(Error):
-
     """Not found key."""
 
     pass
 
 
 class AuthenticationError(Error):
-
     """Authentication failed."""
 
     pass

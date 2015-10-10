@@ -102,7 +102,6 @@ def _retrieve_public_url_swift(r_json):
 
 
 class Client(object):
-
     """The :class:`Client <Client>` object.
 
     This provides REST connection including tempauth or KeyStone Auth.::
@@ -163,7 +162,6 @@ class Client(object):
 
 
 class _CRUD(object):
-
     """The :class:`_CRUD <_CRUD>` object."""
 
     def __init__(self):
@@ -300,7 +298,6 @@ class _CRUD(object):
 
 
 class Container(_CRUD):
-
     """
     Swift container resources.
 
@@ -344,7 +341,6 @@ class Container(_CRUD):
 
 
 class Object(_CRUD):
-
     """Objects resources.
 
     ::
