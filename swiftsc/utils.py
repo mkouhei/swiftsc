@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """swiftsc utility module."""
-import magic
 import sys
 from io import BytesIO
+import magic
 
 
 def check_mimetype(filepath):

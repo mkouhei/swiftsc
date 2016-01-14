@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """swiftsc.client module."""
-import requests
 import os.path
 import json
 import copy
+import requests
 
 from swiftsc import utils
 from swiftsc.exception import ValidationError, AuthenticationError
