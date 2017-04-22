@@ -8,9 +8,7 @@ class Error(Exception):
     Child classes should define an status code, title, and message_format.
     """
 
-    def __init__(self, message=None):
-        """constructor of Error."""
-        super(Error, self).__init__(message)
+    pass
 
 
 class ValidationError(Error):
