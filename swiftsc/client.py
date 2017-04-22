@@ -425,9 +425,9 @@ class Object(_CRUD):
         :param str file_path: local file path
         """
         if length:
-            self.headers['Content-Length'] = length
+            self.headers['Content-Length'] = str(length)
         elif file_path:
-            self.headers['Content-Length'] = os.path.getsize(file_path)
+            self.headers['Content-Length'] = str(os.path.getsize(file_path))
 
     def _set_content_type(self, mimetype=None, file_path=None):
         """Set 'Content-Type' to HTTP headers.
