@@ -1,6 +1,11 @@
 History
 -------
 
+0.7.2 (2017-04-23)
+^^^^^^^^^^^^^^^^^^
+
+* Fixes Content-Length value with latest Requests.
+
 0.7.1 (2015-09-04)
 ^^^^^^^^^^^^^^^^^^
 

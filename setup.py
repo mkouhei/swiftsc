@@ -67,7 +67,7 @@ if os.environ.get('READTHEDOCS', None):
     extras_require['reST'].append('recommonmark')
 
 setup(name='swiftsc',
-      version='0.7.1',
+      version='0.7.2',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',
