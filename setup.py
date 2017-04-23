@@ -66,12 +66,6 @@ extras_require = {
 if os.environ.get('READTHEDOCS', None):
     extras_require['reST'].append('recommonmark')
 
-with open('requirements.txt', 'w') as fobj:
-    fobj.write('\n'.join(requires))
-
-with open('extras_requirement.txt', 'w') as fobj:
-    fobj.write('\n'.join(extras_require.get('reST')))
-
 setup(name='swiftsc',
       version='0.7.1',
       description='Simple client library of OpenStack Swift',
