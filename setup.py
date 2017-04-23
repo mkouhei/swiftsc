@@ -1,20 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-    Copyright (C) 2013-2015 Kouhei Maeda <mkouhei@palmtb.net>
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
+"""setup.py"""
 
 import os
 import sys
@@ -54,6 +39,7 @@ classifiers = [
     "Programming Language :: Python :: 3.3",
     "Programming Language :: Python :: 3.4",
     "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Internet",
@@ -80,14 +66,8 @@ extras_require = {
 if os.environ.get('READTHEDOCS', None):
     extras_require['reST'].append('recommonmark')
 
-with open('requirements.txt', 'w') as fobj:
-    fobj.write('\n'.join(requires))
-
-with open('extras_requirement.txt', 'w') as fobj:
-    fobj.write('\n'.join(extras_require.get('reST')))
-
 setup(name='swiftsc',
-      version='0.7.1',
+      version='0.7.2',
       description='Simple client library of OpenStack Swift',
       long_description=long_description,
       author='Kouhei Maeda',

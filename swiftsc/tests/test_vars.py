@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Sample data for unit test """
+""" Sample data for unit test."""
 import os.path
 
 USERNAME = "username"
