@@ -53,6 +53,7 @@ def read_content(filepath):
     with open(filepath) as fobj:
         return fobj.read()
 
+
 long_description = (
     read_content('README.rst') +
     read_content(os.path.join('docs', 'HISTORY.rst')))
